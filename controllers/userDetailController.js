@@ -1,8 +1,7 @@
-const UserDetail = require('../models/userDetailModel'); // Adjust the path as necessary
+const UserDetail = require('../models/userDetailModel'); 
 
-// Controller for UserDetail CRUD operations
 const UserDetailController = {
-  // Create a new user detail
+
   createUserDetail: async (req, res) => {
     try {
       const userDetail = new UserDetail(req.body);
@@ -13,7 +12,7 @@ const UserDetailController = {
     }
   },
 
-  // Get all user details
+
   getAllUserDetails: async (req, res) => {
     try {
       const userDetails = await UserDetail.find().populate('roleId');
@@ -23,7 +22,6 @@ const UserDetailController = {
     }
   },
 
-  // Get a single user detail by ID
   getUserDetailById: async (req, res) => {
     try {
       const userDetail = await UserDetail.findById(req.params.id).populate('roleId');
@@ -36,12 +34,12 @@ const UserDetailController = {
     }
   },
 
-  // Update a user detail by ID
+
   updateUserDetail: async (req, res) => {
     try {
       const updatedUserDetail = await UserDetail.findByIdAndUpdate(req.params.id, req.body, {
-        new: true, // Return the updated document
-        runValidators: true // Ensure validation rules are applied
+        new: true, 
+        runValidators: true 
       });
       if (!updatedUserDetail) {
         return res.status(404).json({ message: 'User detail not found' });
@@ -52,7 +50,7 @@ const UserDetailController = {
     }
   },
 
-  // Delete a user detail by ID
+
   deleteUserDetail: async (req, res) => {
     try {
       const deletedUserDetail = await UserDetail.findByIdAndDelete(req.params.id);

@@ -1,17 +1,14 @@
 const Role = require('../models/roleModel');
 
-// POST: Create a new role
 const createRole = async (req, res) => {
     try {
         const { roleId, roleName } = req.body;
 
-        // Check if role already exists
         const existingRole = await Role.findOne({ roleId });
         if (existingRole) {
             return res.status(400).json({ message: 'Role ID already exists' });
         }
 
-        // Create new role
         const newRole = new Role({ roleId, roleName });
         await newRole.save();
         res.status(201).json({ message: 'Role created successfully', newRole });
@@ -20,7 +17,7 @@ const createRole = async (req, res) => {
     }
 };
 
-// GET: Fetch all roles
+
 const getAllRoles = async (req, res) => {
     try {
         const roles = await Role.find();
@@ -30,7 +27,7 @@ const getAllRoles = async (req, res) => {
     }
 };
 
-// GET by ID: Fetch a specific role by roleId
+
 const getRoleById = async (req, res) => {
     try {
         const role = await Role.findOne({ roleId: req.params.roleId });
@@ -45,7 +42,7 @@ const getRoleById = async (req, res) => {
     }
 };
 
-// PUT: Update a specific role by roleId
+
 const updateRole = async (req, res) => {
     try {
         const { roleId } = req.params;
@@ -54,7 +51,7 @@ const updateRole = async (req, res) => {
         const updatedRole = await Role.findOneAndUpdate(
             { roleId },
             { roleName },
-            { new: true }  // Return the updated document
+            { new: true }  
         );
 
         if (!updatedRole) {
@@ -67,7 +64,7 @@ const updateRole = async (req, res) => {
     }
 };
 
-// DELETE: Delete a specific role by roleId
+
 const deleteRole = async (req, res) => {
     try {
         const { roleId } = req.params;

@@ -1,18 +1,17 @@
 
 const Permission = require('../models/permission');
 
-// POST: Create a new permission
+
 const createPermission = async (req, res) => {
     try {
         const { permissionId, permissionName } = req.body;
 
-        // Check if permission already exists
+       
         const existingPermission = await Permission.findOne({ permissionId });
         if (existingPermission) {
             return res.status(400).json({ message: 'Permission ID already exists' });
         }
 
-        // Create new permission
         const newPermission = new Permission({ permissionId, permissionName });
         await newPermission.save();
         res.status(201).json({ message: 'Permission created successfully', newPermission });
@@ -21,7 +20,7 @@ const createPermission = async (req, res) => {
     }
 };
 
-// GET: Fetch all permissions
+
 const getAllPermissions = async (req, res) => {
     try {
         const permissions = await Permission.find();
@@ -31,7 +30,7 @@ const getAllPermissions = async (req, res) => {
     }
 };
 
-// GET by ID: Fetch a specific permission by permissionId
+
 const getPermissionById = async (req, res) => {
     try {
         const permission = await Permission.findOne({ permissionId: req.params.permissionId });
@@ -46,7 +45,6 @@ const getPermissionById = async (req, res) => {
     }
 };
 
-// PUT: Update a specific permission by permissionId
 const updatePermission = async (req, res) => {
     try {
         const { permissionId } = req.params;
@@ -55,7 +53,7 @@ const updatePermission = async (req, res) => {
         const updatedPermission = await Permission.findOneAndUpdate(
             { permissionId },
             { permissionName },
-            { new: true }  // Return the updated document
+            { new: true } 
         );
 
         if (!updatedPermission) {
@@ -68,7 +66,7 @@ const updatePermission = async (req, res) => {
     }
 };
 
-// DELETE: Delete a specific permission by permissionId
+
 const deletePermission = async (req, res) => {
     try {
         const { permissionId } = req.params;

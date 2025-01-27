@@ -1,12 +1,12 @@
 const RolePermission = require('../models/rolePermissionModel');
 const Permission = require('../models/permission');
 const Role = require('../models/roleModel');
-// POST: Create a new role-permission mapping
+
 const createRolePermission = async (req, res) => {
     try {
         const { roleId, permissionId } = req.body;
 
-        // Validate roleId and permissionId
+
         const role = await Role.findOne({ roleId });
         const permission = await Permission.findOne({ permissionId });
 
@@ -14,7 +14,6 @@ const createRolePermission = async (req, res) => {
             return res.status(404).json({ message: 'Role or Permission not found' });
         }
 
-        // Check if the mapping already exists
         const existingMapping = await RolePermission.findOne({ roleId, permissionId });
         if (existingMapping) {
             return res.status(400).json({
@@ -22,7 +21,7 @@ const createRolePermission = async (req, res) => {
             });
         }
 
-        // Create the new mapping
+   
         const mapping = new RolePermission({ roleId, permissionId });
         await mapping.save();
 
@@ -35,7 +34,7 @@ const createRolePermission = async (req, res) => {
     }
 };
 
-// GET: Fetch all mappings
+
 const getAllRolePermissions = async (req, res) => {
     try {
         const mappings = await RolePermission.find().populate('roleId permissionId');
@@ -45,7 +44,7 @@ const getAllRolePermissions = async (req, res) => {
     }
 };
 
-// GET by ID: Fetch a specific mapping
+
 const getRolePermissionById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -61,7 +60,7 @@ const getRolePermissionById = async (req, res) => {
     }
 };
 
-// PUT: Update a specific mapping
+
 const updateRolePermission = async (req, res) => {
     try {
         const { id } = req.params;
@@ -83,7 +82,7 @@ const updateRolePermission = async (req, res) => {
     }
 };
 
-// DELETE: Delete a specific mapping
+
 const deleteRolePermission = async (req, res) => {
     try {
         const { id } = req.params;

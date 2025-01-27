@@ -9,14 +9,14 @@ const userDetailSchema = new mongoose.Schema({
   designation: { type: String },
   roleId: { 
     type: mongoose.Schema.Types.Number, 
-    ref: 'RoleModel', // Reference the RoleModel collection
+    ref: 'RoleModel', 
     required: true
    },   
    createdBy: {
     type:String
   },
   createdOn: { type: Date, default: Date.now },
-  isActiveId: { type: Boolean, default: true } // Indicates active status
+  isActiveId: { type: Boolean, default: true } 
 });
 
 // Create the model
