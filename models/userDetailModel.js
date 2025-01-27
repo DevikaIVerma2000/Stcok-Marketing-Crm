@@ -19,7 +19,6 @@ const userDetailSchema = new mongoose.Schema({
   isActiveId: { type: Boolean, default: true } 
 });
 
-// Create the model
 const UserDetail = mongoose.model('UserDetail', userDetailSchema);
 
 module.exports = UserDetail;

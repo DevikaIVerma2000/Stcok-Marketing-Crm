@@ -7,6 +7,7 @@ const userDetailRoutes = require('./routes/userDetailRoute');
 const roleRoute = require('./routes/roleRoute');
 const permissionRoute = require('./routes/permissionRoutes')
 const rolePermissionRoute = require('./routes/rolePermissionRoute')
+const customerRoute = require('./routes/customerRoutes');
 app.use(express.json());
 
 mongoose.connect('mongodb://localhost:27017/stockMarketCrm')
@@ -22,6 +23,7 @@ app.use('/api', userDetailRoutes);
 app.use('/role',roleRoute);
 app.use('/permission',permissionRoute);
 app.use('/rolePermission', rolePermissionRoute);
+app.use('/customers',customerRoute);
 
 app.use('/protectedRoute', requireAuth, (req, res) => {
     res.send('This is a protected route');
