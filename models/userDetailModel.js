@@ -1,23 +1,17 @@
 const mongoose = require('mongoose');
 
 const userDetailSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  phoneNo: { type: String, required: true },
-  address: { type: String },
-  designation: { type: String },
-  roleId: { 
-    type: mongoose.Schema.Types.Number, 
-    ref: 'RoleModel', 
-    required: true
-   },   
-   createdBy: {
-    type:String
-  },
-  createdOn: { type: Date, default: Date.now },
-  isActiveId: { type: Boolean, default: true } 
+  firstName: String,
+  lastName: String,
+  username: { type: String, required: true },
+  email: String,
+  phoneNo: String,
+  address: String,
+  designation: String,
+  roleId: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },  
+  createdBy: String
 });
+
 
 const UserDetail = mongoose.model('UserDetail', userDetailSchema);
 
