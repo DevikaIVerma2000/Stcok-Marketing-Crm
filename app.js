@@ -3,8 +3,9 @@ const mongoose = require('mongoose');
 const app = express();
 
 
-const authRoute = require('./routes/userRoute');
-const userDetailRoutes = require('./routes/userDetailRoute');
+const userAuthRoutes = require('./routes/userAuthRoute');
+const userRoutes = require('./routes/userRoute');
+const userAccessLogsRoutes = require('./routes/userAccessLogsRoutes');
 const roleRoute = require('./routes/roleRoute');
 const permissionRoute = require('./routes/permissionRoutes')
 const rolePermissionRoute = require('./routes/rolePermissionRoute')
@@ -47,8 +48,9 @@ mongoose.connect('mongodb://localhost:27017/stockMarketCrm')
     });
 
 app.use(errorHandler);
-app.use('/auth', authRoute);
-app.use('/api', userDetailRoutes);
+app.use('/auth', userAuthRoutes);
+app.use('/api', userRoutes);
+app.use('/api/access-logs', userAccessLogsRoutes);
 app.use('/role',roleRoute);
 app.use('/permission',permissionRoute);
 app.use('/rolePermission', rolePermissionRoute);
