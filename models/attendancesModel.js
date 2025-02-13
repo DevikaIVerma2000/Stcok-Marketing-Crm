@@ -4,17 +4,17 @@ const attendanceSchema = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Assuming you have a User model
+      ref: 'User', 
       required: true,
     },
     shift_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Shift', // Assuming you have a Shift model
+      ref: 'Shift', 
       required: true,
     },
     attendance_legend_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'AttendanceLegend', // Assuming you have an AttendanceLegend model
+      ref: 'AttendanceLegend', 
       required: true,
     },
     attendance_legend_code: {

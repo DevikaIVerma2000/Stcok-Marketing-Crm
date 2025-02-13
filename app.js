@@ -6,16 +6,18 @@ const app = express();
 const userAuthRoutes = require('./routes/userAuthRoute');
 const userRoutes = require('./routes/userRoute');
 const userAccessLogsRoutes = require('./routes/userAccessLogsRoutes');
+const accessRequestRoutes = require('./routes/accessRequestRoutes');
+const authorizedDevicesRoutes = require('./routes/authorizedDevicesRoutes');
 const roleRoute = require('./routes/roleRoute');
-const permissionRoute = require('./routes/permissionRoutes')
-const rolePermissionRoute = require('./routes/rolePermissionRoute')
+const permissionRoute = require('./routes/permissionRoutes');
+const rolePermissionRoute = require('./routes/rolePermissionRoute');
 const customerRoute = require('./routes/customerRoutes');
 const customerBranchesRoute = require('./routes/customerBranchesRoutes');
 const branchRoute = require('./routes/branchesRoute');
-const customerPackagesRoutes = require('./routes/customerPackagesRoutes')
-const packagesRoutes = require('./routes/packagesRoutes')
-const packageUserRoutes = require('./routes/packageUserRoutes')
-const attendanceRoutes = require('./routes/attendanceRoutes')
+const customerPackagesRoutes = require('./routes/customerPackagesRoutes');
+const packagesRoutes = require('./routes/packagesRoutes');
+const packageUserRoutes = require('./routes/packageUserRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
 const attendanceLegendRoutes = require('./routes/attendanceLegendRoutes');
 const shiftRoutes  = require('./routes/shiftRoutes');
 const callHistoryRoutes  = require('./routes/callHistoryRoutes');
@@ -51,6 +53,8 @@ app.use(errorHandler);
 app.use('/auth', userAuthRoutes);
 app.use('/api', userRoutes);
 app.use('/api/access-logs', userAccessLogsRoutes);
+app.use('/api', accessRequestRoutes);
+app.use('/api/devices', authorizedDevicesRoutes);
 app.use('/role',roleRoute);
 app.use('/permission',permissionRoute);
 app.use('/rolePermission', rolePermissionRoute);

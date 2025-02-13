@@ -3,12 +3,20 @@ const AttendanceLegend = require('../models/attendanceLegendsModel');
 // Create a new attendance legend
 const createAttendanceLegend = async (req, res) => {
   try {
-    const newLegend = new AttendanceLegend(req.body);
-    await newLegend.save();
+    const newLegend = new AttendanceLegend({
+      legend_code: req.body.legend_code,
+      legend_name: req.body.legend_name,
+      legend_description: req.body.legend_description,
+      paid_no_of_days: req.body.paid_no_of_days,
+      status: req.body.status || 0, 
+      created_by: req.body.created_by,
+    });
+
+    const savedLegend = await newLegend.save();
     res.status(201).json({
       success: true,
       message: 'Attendance legend created successfully',
-      data: newLegend,
+      data: savedLegend,
     });
   } catch (error) {
     res.status(500).json({
@@ -23,8 +31,8 @@ const createAttendanceLegend = async (req, res) => {
 const getAllAttendanceLegends = async (req, res) => {
   try {
     const legends = await AttendanceLegend.find()
-      .populate('created_by', 'username'); // Assuming you want to populate creator details
-
+      .populate('created_by', 'username') 
+      .sort({ created_at: -1 }); 
     res.status(200).json({
       success: true,
       message: 'Attendance legends retrieved successfully',
@@ -70,7 +78,9 @@ const getAttendanceLegendById = async (req, res) => {
 const updateAttendanceLegend = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedLegend = await AttendanceLegend.findByIdAndUpdate(id, req.body, {
+    const updatedData = { ...req.body, updated_at: Date.now() };
+
+    const updatedLegend = await AttendanceLegend.findByIdAndUpdate(id, updatedData, {
       new: true,
       runValidators: true,
     });
@@ -96,11 +106,15 @@ const updateAttendanceLegend = async (req, res) => {
   }
 };
 
-// Delete attendance legend by ID
+
 const deleteAttendanceLegend = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedLegend = await AttendanceLegend.findByIdAndDelete(id);
+    const deletedLegend = await AttendanceLegend.findByIdAndUpdate(
+      id,
+      { deleted_at: Date.now() },
+      { new: true }
+    );
 
     if (!deletedLegend) {
       return res.status(404).json({
@@ -111,7 +125,7 @@ const deleteAttendanceLegend = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Attendance legend deleted successfully',
+      message: 'Attendance legend marked as deleted',
       data: deletedLegend,
     });
   } catch (error) {

@@ -82,7 +82,6 @@ Best regards,
 Your Company`
       };
   
-      // Send the email
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           return console.log(error);
@@ -90,7 +89,6 @@ Your Company`
         console.log('Email sent: ' + info.response);
       });
   
-      // Respond with success
       res.status(201).json({ message: 'User detail created successfully, email sent with credentials', data: savedUserDetail });
     } catch (error) {
       res.status(500).json({ message: 'Error creating user detail', error: error.message });

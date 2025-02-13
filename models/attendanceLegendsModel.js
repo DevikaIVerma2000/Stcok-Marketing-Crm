@@ -6,17 +6,17 @@ const attendanceLegendSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
-      maxlength: 4, // Corresponding to varchar(4)
+      maxlength: 4, 
     },
     legend_name: {
       type: String,
       required: true,
-      maxlength: 25, // Corresponding to varchar(25)
+      maxlength: 25, 
     },
     legend_description: {
       type: String,
       required: true,
-      maxlength: 50, // Corresponding to varchar(50)
+      maxlength: 50, 
     },
     paid_no_of_days: {
       type: Number,
@@ -25,11 +25,11 @@ const attendanceLegendSchema = new mongoose.Schema(
     status: {
       type: Number,
       required: true,
-      default: 0, // Default value corresponding to tinyint(4)
+      default: 0, 
     },
     created_by: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Assuming 'User' model exists for 'created_by'
+      ref: 'User', 
       required: true,
     },
     created_at: {
@@ -45,7 +45,7 @@ const attendanceLegendSchema = new mongoose.Schema(
       default: null,
     },
   },
-  { timestamps: true } // Automatically adds `created_at` and `updated_at`
+  { timestamps: true } 
 );
 
 module.exports = mongoose.model('AttendanceLegend', attendanceLegendSchema);

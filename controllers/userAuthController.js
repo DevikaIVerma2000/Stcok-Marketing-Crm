@@ -13,9 +13,8 @@ async function userLogin(req, res) {
             return res.status(400).json({ msg: "Username not found" });
         }
 
-        
         if (user.emp_access_status !== 'active') {
-            return res.status(403).json({ msg: `Account is ${user.emp_access_status}. Please contact support.` });
+            return res.status(403).json({msg: `Account is ${user.emp_access_status}. Please contact support.`});
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);

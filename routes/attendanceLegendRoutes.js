@@ -8,4 +8,5 @@ router.get('/:id', getAttendanceLegendById);
 router.put('/:id', updateAttendanceLegend);
 router.delete('/:id', deleteAttendanceLegend);
 
+
 module.exports = router;
