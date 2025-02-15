@@ -19,7 +19,7 @@ const packagesRoutes = require('./routes/packagesRoutes');
 const packageUserRoutes = require('./routes/packageUserRoutes');
 const attendanceRoutes = require('./routes/attendanceRoutes');
 const attendanceLegendRoutes = require('./routes/attendanceLegendRoutes');
-const shiftRoutes  = require('./routes/shiftRoutes');
+const shiftRoutes = require('./routes/shiftRoutes');
 const callHistoryRoutes  = require('./routes/callHistoryRoutes');
 const callStatusesRoutes  = require('./routes/callStatusesRoutes');
 const companyDetailsRoutes = require('./routes/companyDetailsRoutes');
@@ -35,6 +35,7 @@ const paymentRoutes = require('./routes/paymentsRoutes');
 const paymentModeRoutes = require('./routes/paymentModesRoutes');
 const salesTargetRoutes = require('./routes/salesTargetRoutes');
 const scheduleCallbackRoutes = require('./routes/scheduleCallbacksRoutes');
+const teamsRoutes = require('./routes/teamsRoutes');
 const teamLeaderRoutes = require('./routes/teamLeaderRoutes');
 
 const { requireAuth, errorHandler } = require('./middlewares/userMiddleware');
@@ -64,9 +65,9 @@ app.use('/branches', branchRoute);
 app.use('/customerPackages', customerPackagesRoutes);
 app.use('/packages', packagesRoutes);
 app.use('/packageUsers', packageUserRoutes);
-app.use('/attendance', attendanceRoutes);
+app.use('/api', attendanceRoutes);
 app.use('/attendanceLegend', attendanceLegendRoutes);
-app.use('/shift', shiftRoutes);
+app.use('/api', shiftRoutes);
 app.use('/callHistory', callHistoryRoutes);
 app.use('/callStatuses', callStatusesRoutes);
 app.use('/companyDetails', companyDetailsRoutes);
@@ -82,7 +83,8 @@ app.use('/payments', paymentRoutes);
 app.use('/paymentModes', paymentModeRoutes);
 app.use('/salesTargets', salesTargetRoutes);
 app.use('/scheduleCallbacks', scheduleCallbackRoutes);
-app.use('/teamLeaders', teamLeaderRoutes);
+app.use('/api', teamsRoutes);
+app.use('/api', teamLeaderRoutes);
 
 app.use('/protectedRoute', requireAuth, (req, res) => {
     res.send('This is a protected route');

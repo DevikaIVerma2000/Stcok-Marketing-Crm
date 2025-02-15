@@ -55,20 +55,12 @@ const shiftSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
     deleted_at: {
       type: Date,
       default: null,
     },
   },
-  { timestamps: true } 
+  { timestamps: true }
 );
 
 module.exports = mongoose.model('Shift', shiftSchema);

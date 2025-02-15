@@ -1,5 +1,12 @@
 const express = require('express');
-const { createShift,  getAllShifts, getShiftById, updateShift, deleteShift } = require('../controllers/shiftController');
+const {
+  createShift,
+  getAllShifts,
+  getShiftById,
+  updateShift,
+  deleteShift,
+} = require('../controllers/shiftController');
+
 const router = express.Router();
 
 router.post('/shifts', createShift);
