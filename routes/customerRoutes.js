@@ -2,10 +2,10 @@ const express = require('express');
 const {createCustomer,getAllCustomers,getCustomerById,updateCustomer,deleteCustomer,} = require('../controllers/customerController');
 const router = express.Router();
 
-router.post('/', createCustomer); 
-router.get('/', getAllCustomers); 
-router.get('/:id', getCustomerById); 
-router.put('/:id', updateCustomer); 
-router.delete('/:id', deleteCustomer); 
+router.post('/customers', createCustomer); 
+router.get('/customers', getAllCustomers); 
+router.get('/customers/:id', getCustomerById); 
+router.put('/customers/:id', updateCustomer); 
+router.delete('/customers/:id', deleteCustomer);
 
 module.exports = router;

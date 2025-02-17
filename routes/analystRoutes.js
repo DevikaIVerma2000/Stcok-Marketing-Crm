@@ -1,12 +1,12 @@
 const express = require("express");
 const { createAnalyst, getAllAnalysts, getAnalystById, updateAnalyst, deleteAnalyst } = require("../controllers/analystController");
-const { requireAuth } = require("../middleware/authMiddleware"); 
+const { requireAuth } = require("../middlewares/userMiddleware"); 
 const router = express.Router();
 
-router.post("/create", requireAuth, createAnalyst);  
-router.get("/", getAllAnalysts);                    
-router.get("/:id", getAnalystById);                 
-router.put("/:id", requireAuth, updateAnalyst);      
-router.delete("/:id", requireAuth, deleteAnalyst);   
+router.post("/analyst", requireAuth, createAnalyst);  
+router.get("/analyst", getAllAnalysts);             
+router.get("/analyst/:id", getAnalystById);       
+router.put("/analyst/:id", requireAuth, updateAnalyst); 
+router.delete("/analyst/:id", requireAuth, deleteAnalyst);
 
 module.exports = router;

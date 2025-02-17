@@ -7,11 +7,10 @@ const teamMemberSchema = new mongoose.Schema({
     required: true,
   },
   team_member_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',  
+    type: Number,
     required: true,
   },
-  created_by: {
+  created_by:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',  
     required: true,

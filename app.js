@@ -3,9 +3,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 
-const userAuthRoutes = require('./routes/userAuthRoute');
-const userRoutes = require('./routes/userRoute');
-const userAccessLogsRoutes = require('./routes/userAccessLogsRoutes');
+const analystRoutes = require('./routes/analystRoutes');
 const accessRequestRoutes = require('./routes/accessRequestRoutes');
 const authorizedDevicesRoutes = require('./routes/authorizedDevicesRoutes');
 const roleRoute = require('./routes/roleRoute');
@@ -37,6 +35,10 @@ const salesTargetRoutes = require('./routes/salesTargetRoutes');
 const scheduleCallbackRoutes = require('./routes/scheduleCallbacksRoutes');
 const teamsRoutes = require('./routes/teamsRoutes');
 const teamLeaderRoutes = require('./routes/teamLeaderRoutes');
+const teamMembersRoutes = require('./routes/teamMembersRoutes');
+const userAuthRoutes = require('./routes/userAuthRoute');
+const userRoutes = require('./routes/userRoute');
+const userAccessLogsRoutes = require('./routes/userAccessLogsRoutes');
 
 const { requireAuth, errorHandler } = require('./middlewares/userMiddleware');
 app.use(express.json());
@@ -51,15 +53,13 @@ mongoose.connect('mongodb://localhost:27017/stockMarketCrm')
     });
 
 app.use(errorHandler);
-app.use('/auth', userAuthRoutes);
-app.use('/api', userRoutes);
-app.use('/api/access-logs', userAccessLogsRoutes);
+app.use('/api', analystRoutes);
 app.use('/api', accessRequestRoutes);
 app.use('/api/devices', authorizedDevicesRoutes);
 app.use('/role',roleRoute);
 app.use('/permission',permissionRoute);
 app.use('/rolePermission', rolePermissionRoute);
-app.use('/customers',customerRoute);
+app.use('/api',customerRoute);
 app.use('/customerBranches', customerBranchesRoute);
 app.use('/branches', branchRoute);
 app.use('/customerPackages', customerPackagesRoutes);
@@ -85,11 +85,14 @@ app.use('/salesTargets', salesTargetRoutes);
 app.use('/scheduleCallbacks', scheduleCallbackRoutes);
 app.use('/api', teamsRoutes);
 app.use('/api', teamLeaderRoutes);
+app.use('/api', teamMembersRoutes);
+app.use('/auth', userAuthRoutes);
+app.use('/api', userRoutes);
+app.use('/api/access-logs', userAccessLogsRoutes);
 
 app.use('/protectedRoute', requireAuth, (req, res) => {
     res.send('This is a protected route');
 });
-
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
