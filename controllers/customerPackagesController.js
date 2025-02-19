@@ -22,7 +22,11 @@ const createCustomerPackage = async (req, res) => {
 // Get all customer packages
 const getAllCustomerPackages = async (req, res) => {
   try {
-    const packages = await CustomerPackages.find();
+    const packages = await CustomerPackages.find()
+      .populate('customer_id', 'name email') 
+      .populate('user_id', 'username') 
+      .populate('package_id', 'package_name price'); 
+
     res.status(200).json({
       success: true,
       message: 'Customer packages retrieved successfully',
@@ -41,7 +45,11 @@ const getAllCustomerPackages = async (req, res) => {
 const getCustomerPackageById = async (req, res) => {
   try {
     const { id } = req.params;
-    const customerPackage = await CustomerPackages.findById(id);
+    const customerPackage = await CustomerPackages.findById(id)
+      .populate('customer_id', 'name email')
+      .populate('user_id', 'username')
+      .populate('package_id', 'package_name price');
+
     if (!customerPackage) {
       return res.status(404).json({
         success: false,
@@ -69,7 +77,10 @@ const updateCustomerPackage = async (req, res) => {
     const updatedPackage = await CustomerPackages.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).populate('customer_id', 'name email')
+      .populate('user_id', 'username')
+      .populate('package_id', 'package_name price');
+
     if (!updatedPackage) {
       return res.status(404).json({
         success: false,
@@ -90,11 +101,14 @@ const updateCustomerPackage = async (req, res) => {
   }
 };
 
-// Delete a customer package by ID
+// Soft delete a customer package by ID (Update `deleted_at`)
 const deleteCustomerPackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedPackage = await CustomerPackages.findByIdAndDelete(id);
+    const deletedPackage = await CustomerPackages.findByIdAndUpdate(id, {
+      deleted_at: new Date(),
+    }, { new: true });
+
     if (!deletedPackage) {
       return res.status(404).json({
         success: false,
@@ -103,7 +117,7 @@ const deleteCustomerPackage = async (req, res) => {
     }
     res.status(200).json({
       success: true,
-      message: 'Customer package deleted successfully',
+      message: 'Customer package soft deleted successfully',
       data: deletedPackage,
     });
   } catch (error) {

@@ -7,8 +7,7 @@ const packagesSchema = new mongoose.Schema(
       required: true,
     },
     package_amount: {
-      type: mongoose.Schema.Types.Decimal128,
-      required: false,
+      type: Number,  
       default: null,
     },
     package_validity: {
@@ -29,6 +28,7 @@ const packagesSchema = new mongoose.Schema(
     },
     package_status: {
       type: String,
+      enum: ['Active', 'Inactive', 'Expired'], 
       required: true,
     },
     created_by: {
@@ -40,14 +40,6 @@ const packagesSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Branch', 
       required: true,
-    },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
     },
     deleted_at: {
       type: Date,

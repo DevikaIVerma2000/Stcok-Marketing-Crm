@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
-const userAuth = require("../models/userAuthModel");
+const UserAuth = require("../models/userAuthModel");
 
 const UserDetailController = {
   createUserDetail: async (req, res) => {
@@ -24,17 +24,27 @@ const UserDetailController = {
       } = req.body;
 
       if (!emp_id || !full_name || !primary_contact) {
-        return res
-          .status(400)
-          .json({
-            message: "emp_id, full_name, and primary_contact are required",
-          });
+        return res.status(400).json({
+          message: "emp_id, full_name, and primary_contact are required",
+        });
       }
 
-      const username = emp_id;
+      // Check if email already exists
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).json({ message: "Email already exists" });
+      }
 
-      // Check if the username (emp_id) already exists in the userAuth model
-      const existingUserAuth = await userAuth.findOne({ username });
+      // Check if primary_contact already exists
+      const existingUser = await User.findOne({ primary_contact });
+      if (existingUser) {
+        return res
+          .status(400)
+          .json({ message: "Primary contact already exists" });
+      }
+
+      // Check if emp_id (used as username) already exists in userAuth
+      const existingUserAuth = await UserAuth.findOne({ username: emp_id });
       if (existingUserAuth) {
         return res
           .status(400)
@@ -42,10 +52,8 @@ const UserDetailController = {
       }
 
       const randomPassword = crypto.randomBytes(8).toString("hex");
-
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
-      // Create the user detail
       const userDetail = new User({
         emp_id,
         first_name: firstName,
@@ -61,17 +69,14 @@ const UserDetailController = {
 
       const savedUserDetail = await userDetail.save();
 
-      // Create the userAuth entry with the emp_id as username
-      const userAuthEntry = new userAuth({
+      const userAuthEntry = new UserAuth({
         user_id: savedUserDetail._id,
-        username, // emp_id is used as username
+        username: emp_id,
         password: hashedPassword,
       });
 
-      // Save the userAuth entry to the database
       await userAuthEntry.save();
 
-      // Send the email with credentials
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -85,32 +90,31 @@ const UserDetailController = {
         to: email,
         subject: "Your account details",
         text: `Hi ${firstName},
-  
-  Your account has been created successfully.
-  
-  Username: ${username}
-  Password: ${randomPassword}
-  
-  Please use these credentials to log in.
-  
-  Best regards,
-  Your Company`,
+
+Your account has been created successfully.
+
+Username: ${emp_id}
+Password: ${randomPassword}
+
+Please use these credentials to log in.
+
+Best regards,
+Your Company`,
       };
 
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
-          return console.log(error);
+          console.error("Email sending failed:", error);
+        } else {
+          console.log("Email sent:", info.response);
         }
-        console.log("Email sent: " + info.response);
       });
 
-      res
-        .status(201)
-        .json({
-          message:
-            "User detail created successfully, email sent with credentials",
-          data: savedUserDetail,
-        });
+      res.status(201).json({
+        message:
+          "User detail created successfully, email sent with credentials",
+        data: savedUserDetail,
+      });
     } catch (error) {
       res
         .status(500)
@@ -121,12 +125,10 @@ const UserDetailController = {
   getAllUserDetails: async (req, res) => {
     try {
       const userDetails = await User.find();
-      res
-        .status(200)
-        .json({
-          message: "User details fetched successfully",
-          data: userDetails,
-        });
+      res.status(200).json({
+        message: "User details fetched successfully",
+        data: userDetails,
+      });
     } catch (error) {
       res
         .status(500)
@@ -140,12 +142,10 @@ const UserDetailController = {
       if (!userDetail) {
         return res.status(404).json({ message: "User detail not found" });
       }
-      res
-        .status(200)
-        .json({
-          message: "User detail fetched successfully",
-          data: userDetail,
-        });
+      res.status(200).json({
+        message: "User detail fetched successfully",
+        data: userDetail,
+      });
     } catch (error) {
       res
         .status(500)
@@ -166,12 +166,10 @@ const UserDetailController = {
       if (!updatedUserDetail) {
         return res.status(404).json({ message: "User detail not found" });
       }
-      res
-        .status(200)
-        .json({
-          message: "User detail updated successfully",
-          data: updatedUserDetail,
-        });
+      res.status(200).json({
+        message: "User detail updated successfully",
+        data: updatedUserDetail,
+      });
     } catch (error) {
       res
         .status(500)
@@ -185,12 +183,10 @@ const UserDetailController = {
       if (!deletedUserDetail) {
         return res.status(404).json({ message: "User detail not found" });
       }
-      res
-        .status(200)
-        .json({
-          message: "User detail deleted successfully",
-          data: deletedUserDetail,
-        });
+      res.status(200).json({
+        message: "User detail deleted successfully",
+        data: deletedUserDetail,
+      });
     } catch (error) {
       res
         .status(500)

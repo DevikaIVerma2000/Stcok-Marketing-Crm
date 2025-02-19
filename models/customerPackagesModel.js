@@ -25,19 +25,19 @@ const customerPackagesSchema = new mongoose.Schema({
         required: true
     },
     package_amount: {
-        type: mongoose.Schema.Types.Decimal128,
+        type: Number,
         required: true
     },
     discount_amount: {
-        type: mongoose.Schema.Types.Decimal128,
+        type: Number,  
         required: true
     },
     payable_amount: {
-        type: mongoose.Schema.Types.Decimal128,
+        type: Number,  
         required: true
     },
     paid_amount: {
-        type: mongoose.Schema.Types.Decimal128,
+        type: Number,  
         default: 0.00
     },
     notes: {
@@ -58,20 +58,11 @@ const customerPackagesSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-    created_at: {
-        type: Date,
-        default: Date.now
-    },
-    updated_at: {
-        type: Date,
-        default: Date.now
-    },
     deleted_at: {
         type: Date,
         default: null
     }
-}, { timestamps: true });
-
+}, { timestamps: true }); 
 
 const CustomerPackages = mongoose.model('CustomerPackages', customerPackagesSchema);
 

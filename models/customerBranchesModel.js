@@ -2,22 +2,26 @@ const mongoose = require('mongoose');
 
 const customerBranchesSchema = new mongoose.Schema({
   customer_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Customer', 
     required: true,
     index: true,
   },
   branch_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Branch', 
     required: true,
     index: true,
   },
   user_id: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', 
     required: true,
     index: true,
   },
   created_by: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', 
     required: true,
     index: true,
   },
@@ -27,12 +31,10 @@ const customerBranchesSchema = new mongoose.Schema({
   },
   updated_at: {
     type: Date,
-    default: null,
   },
   deleted_at: {
     type: Date,
-    default: null,
   }
-});
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 module.exports = mongoose.model('CustomerBranch', customerBranchesSchema);

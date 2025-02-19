@@ -1,8 +1,25 @@
 const Package = require('../models/packagesModel');
 
-// Create a new package
 const createPackage = async (req, res) => {
   try {
+    const { package_name, package_validity, package_status, branch_id } = req.body;
+
+    // Check required fields
+    if (!package_name || !package_validity || !package_status || !branch_id) {
+      return res.status(400).json({
+        success: false,
+        message: 'package_name, package_validity, package_status, and branch_id are required',
+      });
+    }
+
+    const validStatuses = ['Active', 'Inactive', 'Expired'];
+    if (!validStatuses.includes(package_status)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid package_status. Allowed values: ${validStatuses.join(', ')}`,
+      });
+    }
+
     const newPackage = new Package(req.body);
     await newPackage.save();
     res.status(201).json({
@@ -19,10 +36,19 @@ const createPackage = async (req, res) => {
   }
 };
 
-// Get all packages
+// Get all packages (excluding soft deleted ones)
 const getAllPackages = async (req, res) => {
   try {
-    const packages = await Package.find();
+    const packages = await Package.find({ deleted_at: null });
+
+    if (packages.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No packages found',
+        data: [],
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: 'Packages retrieved successfully',
@@ -41,13 +67,15 @@ const getAllPackages = async (req, res) => {
 const getPackageById = async (req, res) => {
   try {
     const { id } = req.params;
-    const package = await Package.findById(id);
+    const package = await Package.findOne({ _id: id, deleted_at: null });
+
     if (!package) {
       return res.status(404).json({
         success: false,
         message: 'Package not found',
       });
     }
+
     res.status(200).json({
       success: true,
       message: 'Package retrieved successfully',
@@ -66,16 +94,20 @@ const getPackageById = async (req, res) => {
 const updatePackage = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const existingPackage = await Package.findOne({ _id: id, deleted_at: null });
+    if (!existingPackage) {
+      return res.status(404).json({
+        success: false,
+        message: 'Package not found or has been deleted',
+      });
+    }
+
     const updatedPackage = await Package.findByIdAndUpdate(id, req.body, {
       new: true,
       runValidators: true,
     });
-    if (!updatedPackage) {
-      return res.status(404).json({
-        success: false,
-        message: 'Package not found',
-      });
-    }
+
     res.status(200).json({
       success: true,
       message: 'Package updated successfully',
@@ -90,20 +122,27 @@ const updatePackage = async (req, res) => {
   }
 };
 
-// Delete a package by ID
+// Soft Delete a package by ID
 const deletePackage = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedPackage = await Package.findByIdAndDelete(id);
+
+    const deletedPackage = await Package.findByIdAndUpdate(
+      id,
+      { deleted_at: new Date() },
+      { new: true }
+    );
+
     if (!deletedPackage) {
       return res.status(404).json({
         success: false,
         message: 'Package not found',
       });
     }
+
     res.status(200).json({
       success: true,
-      message: 'Package deleted successfully',
+      message: 'Package soft deleted successfully',
       data: deletedPackage,
     });
   } catch (error) {
