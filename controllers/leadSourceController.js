@@ -5,7 +5,6 @@ const createLeadSource = async (req, res) => {
   try {
     const { source_name, branch_id, source_description, created_by } = req.body;
 
-    // Directly create a new lead source without duplicate check
     const newLeadSource = new LeadSource({
       source_name,
       branch_id,

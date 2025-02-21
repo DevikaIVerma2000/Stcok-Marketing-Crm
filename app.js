@@ -79,7 +79,7 @@ app.use('/employmentDetails', employmentDetailsRoutes);
 app.use('/invoices', invoiceRoutes);
 app.use('/api', leadsRoutes);
 app.use('/api', leadSourceRoutes);
-app.use('/marketingAgencies', MarketingAgencyRoutes);
+app.use('/api', MarketingAgencyRoutes);
 app.use('/migrations', migrationRoutes);
 app.use('/payments', paymentRoutes);
 app.use('/paymentModes', paymentModeRoutes);
