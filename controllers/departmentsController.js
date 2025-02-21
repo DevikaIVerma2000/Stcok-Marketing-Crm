@@ -29,7 +29,6 @@ const createDepartment = async (req, res) => {
 };
 
 
-// Get all departments (excluding soft-deleted ones)
 const getAllDepartments = async (req, res) => {
   try {
     const departments = await Department.find({ deleted_at: null }).populate('created_by branch_id');

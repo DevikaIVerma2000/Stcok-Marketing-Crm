@@ -3,8 +3,18 @@ const LeadSource = require('../models/leadSourcesModel');
 // Create a new lead source
 const createLeadSource = async (req, res) => {
   try {
-    const newLeadSource = new LeadSource(req.body);
+    const { source_name, branch_id, source_description, created_by } = req.body;
+
+    // Directly create a new lead source without duplicate check
+    const newLeadSource = new LeadSource({
+      source_name,
+      branch_id,
+      source_description,
+      created_by
+    });
+
     await newLeadSource.save();
+
     res.status(201).json({
       success: true,
       message: 'Lead source created successfully',
@@ -19,10 +29,12 @@ const createLeadSource = async (req, res) => {
   }
 };
 
-// Get all lead sources
+
+
+// Get all lead sources 
 const getAllLeadSources = async (req, res) => {
   try {
-    const leadSources = await LeadSource.find();
+    const leadSources = await LeadSource.find({ deleted_at: null });
     res.status(200).json({
       success: true,
       message: 'Lead sources retrieved successfully',
@@ -41,15 +53,13 @@ const getAllLeadSources = async (req, res) => {
 const getLeadSourceById = async (req, res) => {
   try {
     const { id } = req.params;
-    const leadSource = await LeadSource.findById(id);
-
+    const leadSource = await LeadSource.findOne({ _id: id, deleted_at: null });
     if (!leadSource) {
       return res.status(404).json({
         success: false,
-        message: 'Lead source not found',
+        message: 'Lead source not found or deleted',
       });
     }
-
     res.status(200).json({
       success: true,
       message: 'Lead source retrieved successfully',
@@ -68,18 +78,17 @@ const getLeadSourceById = async (req, res) => {
 const updateLeadSource = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedLeadSource = await LeadSource.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
+    const updatedLeadSource = await LeadSource.findOneAndUpdate(
+      { _id: id, deleted_at: null },
+      req.body,
+      { new: true, runValidators: true }
+    );
     if (!updatedLeadSource) {
       return res.status(404).json({
         success: false,
-        message: 'Lead source not found',
+        message: 'Lead source not found or deleted',
       });
     }
-
     res.status(200).json({
       success: true,
       message: 'Lead source updated successfully',
@@ -94,19 +103,21 @@ const updateLeadSource = async (req, res) => {
   }
 };
 
-// Delete a lead source by ID
+// Soft delete a lead source 
 const deleteLeadSource = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedLeadSource = await LeadSource.findByIdAndDelete(id);
-
+    const deletedLeadSource = await LeadSource.findOneAndUpdate(
+      { _id: id, deleted_at: null },
+      { deleted_at: new Date() },
+      { new: true }
+    );
     if (!deletedLeadSource) {
       return res.status(404).json({
         success: false,
-        message: 'Lead source not found',
+        message: 'Lead source not found or already deleted',
       });
     }
-
     res.status(200).json({
       success: true,
       message: 'Lead source deleted successfully',

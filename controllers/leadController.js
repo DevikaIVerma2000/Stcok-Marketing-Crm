@@ -1,44 +1,49 @@
 const Lead = require('../models/leadsModel');
 
-// Function to create a new lead
+// Create a new lead
 const createLead = async (req, res) => {
   try {
-    const {
-      full_name, primary_contact, secondary_contact, email_id, date_of_birth, address,
-      city, state, zipcode, country, language, segment, trading_budget, user_id, source_id,
-      agency_id, created_by, priority, called_count, call_status_code, dnc, notes,
-      dup_count, dup_status, follow_up_date, reassign_datetime, reset_datetime, notify_email,
-      updated_by, branch_id
-    } = req.body;
+    const requiredFields = ['full_name', 'primary_contact', 'source_id', 'agency_id', 'created_by', 'branch_id'];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({ message: `${field} is required` });
+      }
+    }
 
-    const newLead = new Lead({
-      full_name, primary_contact, secondary_contact, email_id, date_of_birth, address,
-      city, state, zipcode, country, language, segment, trading_budget, user_id, source_id,
-      agency_id, created_by, priority, called_count, call_status_code, dnc, notes,
-      dup_count, dup_status, follow_up_date, reassign_datetime, reset_datetime, notify_email,
-      updated_by, branch_id
-    });
-
+    const newLead = new Lead(req.body);
     await newLead.save();
     res.status(201).json({ message: 'Lead created successfully', lead: newLead });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error creating lead', error });
+    res.status(500).json({ message: 'Error creating lead', error: error.message });
   }
 };
 
-// Function to get all leads
+// Get all leads with pagination and optional search
 const getAllLeads = async (req, res) => {
   try {
-    const leads = await Lead.find();
-    res.status(200).json(leads);
+    const { page = 1, limit = 10, search = '' } = req.query;
+
+    const query = search ? { full_name: { $regex: search, $options: 'i' } } : {};
+
+    const leads = await Lead.find(query)
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
+
+    const totalLeads = await Lead.countDocuments(query);
+
+    res.status(200).json({
+      total: totalLeads,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      leads
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching leads', error });
+    res.status(500).json({ message: 'Error fetching leads', error: error.message });
   }
 };
 
-// Function to get a lead by ID
+// Get a single lead by ID
 const getLeadById = async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id);
@@ -47,36 +52,35 @@ const getLeadById = async (req, res) => {
     }
     res.status(200).json(lead);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error fetching lead', error });
+    res.status(500).json({ message: 'Error fetching lead', error: error.message });
   }
 };
 
-// Function to update a lead by ID
+// Update a lead by ID
 const updateLead = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const { created_by, source_id, agency_id, branch_id, ...updateData } = req.body;
+
+    const lead = await Lead.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
     res.status(200).json({ message: 'Lead updated successfully', lead });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error updating lead', error });
+    res.status(500).json({ message: 'Error updating lead', error: error.message });
   }
 };
 
-// Function to delete a lead by ID
+// Soft delete a lead
 const deleteLead = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndDelete(req.params.id);
+    const lead = await Lead.findByIdAndUpdate(req.params.id, { deleted: true }, { new: true });
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
-    res.status(200).json({ message: 'Lead deleted successfully' });
+    res.status(200).json({ message: 'Lead marked as deleted', lead });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error deleting lead', error });
+    res.status(500).json({ message: 'Error deleting lead', error: error.message });
   }
 };
 
