@@ -3,7 +3,11 @@ const CallStatus = require('../models/callStatusesModel');
 // Create a new call status
 const createCallStatus = async (req, res) => {
   try {
-    const newCallStatus = new CallStatus(req.body);
+    const newCallStatus = new CallStatus({
+      ...req.body,
+      created_by: req.user._id, 
+    });
+
     await newCallStatus.save();
     res.status(201).json({
       success: true,
@@ -19,13 +23,14 @@ const createCallStatus = async (req, res) => {
   }
 };
 
-// Get all call statuses
+// Get all call statuses 
 const getAllCallStatuses = async (req, res) => {
   try {
-    const callStatuses = await CallStatus.find()
+    const callStatuses = await CallStatus.find({ deleted_at: null })
       .populate('created_by', 'username')
       .populate('updated_by', 'username')
-      .populate('branch_id', 'branch_name'); 
+      .populate('branch_id', 'branch_name');
+
     res.status(200).json({
       success: true,
       message: 'Call statuses retrieved successfully',
@@ -40,11 +45,11 @@ const getAllCallStatuses = async (req, res) => {
   }
 };
 
-// Get call status by ID
+// Get call status by ID 
 const getCallStatusById = async (req, res) => {
   try {
     const { id } = req.params;
-    const callStatus = await CallStatus.findById(id)
+    const callStatus = await CallStatus.findOne({ _id: id, deleted_at: null })
       .populate('created_by', 'username')
       .populate('updated_by', 'username')
       .populate('branch_id', 'branch_name');
@@ -74,10 +79,11 @@ const getCallStatusById = async (req, res) => {
 const updateCallStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedCallStatus = await CallStatus.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedCallStatus = await CallStatus.findOneAndUpdate(
+      { _id: id, deleted_at: null },
+      { ...req.body, updated_by: req.user._id }, 
+      { new: true, runValidators: true }
+    );
 
     if (!updatedCallStatus) {
       return res.status(404).json({
@@ -100,11 +106,15 @@ const updateCallStatus = async (req, res) => {
   }
 };
 
-// Delete call status by ID
+// Soft delete call status by ID 
 const deleteCallStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedCallStatus = await CallStatus.findByIdAndDelete(id);
+    const deletedCallStatus = await CallStatus.findOneAndUpdate(
+      { _id: id, deleted_at: null },
+      { deleted_at: new Date(), updated_by: req.user._id }, 
+      { new: true }
+    );
 
     if (!deletedCallStatus) {
       return res.status(404).json({

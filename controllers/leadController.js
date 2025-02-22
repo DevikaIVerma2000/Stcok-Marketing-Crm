@@ -3,7 +3,7 @@ const Lead = require('../models/leadsModel');
 // Create a new lead
 const createLead = async (req, res) => {
   try {
-    const requiredFields = ['full_name', 'primary_contact', 'source_id', 'agency_id', 'created_by', 'branch_id'];
+    const requiredFields = ['full_name', 'primary_contact', 'user_id', 'source_id', 'agency_id', 'created_by', 'branch_id'];
     for (const field of requiredFields) {
       if (!req.body[field]) {
         return res.status(400).json({ message: `${field} is required` });
@@ -18,14 +18,18 @@ const createLead = async (req, res) => {
   }
 };
 
-// Get all leads with pagination and optional search
+// Get all leads with pagination and optional search 
 const getAllLeads = async (req, res) => {
   try {
     const { page = 1, limit = 10, search = '' } = req.query;
 
-    const query = search ? { full_name: { $regex: search, $options: 'i' } } : {};
+    const query = { deleted: false };
+    if (search) {
+      query.full_name = { $regex: search, $options: 'i' };
+    }
 
     const leads = await Lead.find(query)
+      .populate('user_id source_id agency_id created_by updated_by branch_id')
       .limit(limit * 1)
       .skip((page - 1) * limit)
       .sort({ createdAt: -1 });
@@ -43,10 +47,12 @@ const getAllLeads = async (req, res) => {
   }
 };
 
-// Get a single lead by ID
+// Get a single lead by ID 
 const getLeadById = async (req, res) => {
   try {
-    const lead = await Lead.findById(req.params.id);
+    const lead = await Lead.findOne({ _id: req.params.id, deleted: false })
+      .populate('user_id source_id agency_id created_by updated_by branch_id');
+    
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
@@ -59,9 +65,15 @@ const getLeadById = async (req, res) => {
 // Update a lead by ID
 const updateLead = async (req, res) => {
   try {
+    // Prevent updating these fields
     const { created_by, source_id, agency_id, branch_id, ...updateData } = req.body;
 
-    const lead = await Lead.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
+    const lead = await Lead.findOneAndUpdate(
+      { _id: req.params.id, deleted: false },
+      updateData,
+      { new: true, runValidators: true }
+    ).populate('user_id source_id agency_id created_by updated_by branch_id');
+
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
@@ -74,7 +86,12 @@ const updateLead = async (req, res) => {
 // Soft delete a lead
 const deleteLead = async (req, res) => {
   try {
-    const lead = await Lead.findByIdAndUpdate(req.params.id, { deleted: true }, { new: true });
+    const lead = await Lead.findOneAndUpdate(
+      { _id: req.params.id, deleted: false },
+      { deleted: true },
+      { new: true }
+    );
+
     if (!lead) {
       return res.status(404).json({ message: 'Lead not found' });
     }
@@ -84,10 +101,29 @@ const deleteLead = async (req, res) => {
   }
 };
 
+// Restore a soft-deleted lead
+const restoreLead = async (req, res) => {
+  try {
+    const lead = await Lead.findOneAndUpdate(
+      { _id: req.params.id, deleted: true },
+      { deleted: false },
+      { new: true }
+    );
+
+    if (!lead) {
+      return res.status(404).json({ message: 'Lead not found or not deleted' });
+    }
+    res.status(200).json({ message: 'Lead restored successfully', lead });
+  } catch (error) {
+    res.status(500).json({ message: 'Error restoring lead', error: error.message });
+  }
+};
+
 module.exports = {
   createLead,
   getAllLeads,
   getLeadById,
   updateLead,
-  deleteLead
+  deleteLead,
+  restoreLead
 };
