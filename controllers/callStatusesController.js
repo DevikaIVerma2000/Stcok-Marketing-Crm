@@ -1,139 +1,83 @@
+const mongoose = require('mongoose');
 const CallStatus = require('../models/callStatusesModel');
 
-// Create a new call status
 const createCallStatus = async (req, res) => {
   try {
+    const { call_status_code, call_status_name, created_by, branch_id } = req.body;
+
+    if (!call_status_code || !call_status_name || !created_by || !branch_id) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingCallStatus = await CallStatus.findOne({ call_status_code, branch_id, deleted_at: null });
+    if (existingCallStatus) {
+      return res.status(409).json({ message: 'Call status with this code already exists in this branch' });
+    }
+
     const newCallStatus = new CallStatus({
-      ...req.body,
-      created_by: req.user._id, 
+      call_status_code,
+      call_status_name,
+      created_by,
+      branch_id,
     });
 
-    await newCallStatus.save();
-    res.status(201).json({
-      success: true,
-      message: 'Call status created successfully',
-      data: newCallStatus,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error creating call status',
-      error: error.message,
-    });
+    const savedCallStatus = await newCallStatus.save();
+    res.status(201).json(savedCallStatus);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Get all call statuses 
 const getAllCallStatuses = async (req, res) => {
   try {
-    const callStatuses = await CallStatus.find({ deleted_at: null })
-      .populate('created_by', 'username')
-      .populate('updated_by', 'username')
-      .populate('branch_id', 'branch_name');
-
-    res.status(200).json({
-      success: true,
-      message: 'Call statuses retrieved successfully',
-      data: callStatuses,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching call statuses',
-      error: error.message,
-    });
+    const callStatuses = await CallStatus.find({ deleted_at: null }).populate('created_by branch_id');
+    res.status(200).json(callStatuses);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Get call status by ID 
 const getCallStatusById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const callStatus = await CallStatus.findOne({ _id: id, deleted_at: null })
-      .populate('created_by', 'username')
-      .populate('updated_by', 'username')
-      .populate('branch_id', 'branch_name');
-
+    const callStatus = await CallStatus.findOne({ _id: req.params.id, deleted_at: null }).populate('created_by branch_id');
     if (!callStatus) {
-      return res.status(404).json({
-        success: false,
-        message: 'Call status not found',
-      });
+      return res.status(404).json({ message: 'Call status not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Call status retrieved successfully',
-      data: callStatus,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error fetching call status',
-      error: error.message,
-    });
+    res.status(200).json(callStatus);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Update call status by ID
 const updateCallStatus = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updatedCallStatus = await CallStatus.findOneAndUpdate(
-      { _id: id, deleted_at: null },
-      { ...req.body, updated_by: req.user._id }, 
-      { new: true, runValidators: true }
+    const updatedCallStatus = await CallStatus.findByIdAndUpdate(
+      req.params.id,
+      { ...req.body, updated_at: Date.now() },
+      { new: true }
     );
-
     if (!updatedCallStatus) {
-      return res.status(404).json({
-        success: false,
-        message: 'Call status not found',
-      });
+      return res.status(404).json({ message: 'Call status not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Call status updated successfully',
-      data: updatedCallStatus,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error updating call status',
-      error: error.message,
-    });
+    res.status(200).json(updatedCallStatus);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Soft delete call status by ID 
 const deleteCallStatus = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedCallStatus = await CallStatus.findOneAndUpdate(
-      { _id: id, deleted_at: null },
-      { deleted_at: new Date(), updated_by: req.user._id }, 
+    const deletedCallStatus = await CallStatus.findByIdAndUpdate(
+      req.params.id,
+      { deleted_at: Date.now() },
       { new: true }
     );
-
     if (!deletedCallStatus) {
-      return res.status(404).json({
-        success: false,
-        message: 'Call status not found',
-      });
+      return res.status(404).json({ message: 'Call status not found' });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Call status deleted successfully',
-      data: deletedCallStatus,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Error deleting call status',
-      error: error.message,
-    });
+    res.status(200).json({ message: 'Call status soft deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
