@@ -9,10 +9,10 @@ const {
 
 const router = express.Router();
 
-router.post('/payment-modes', createPaymentMode);
-router.get('/payment-modes', getAllPaymentModes);
-router.get('/payment-modes/:id', getPaymentModeById);
-router.put('/payment-modes/:id', updatePaymentMode);
-router.delete('/payment-modes/:id', deletePaymentMode);
+router.post('/paymentModes', createPaymentMode);
+router.get('/paymentModes', getAllPaymentModes);
+router.get('/paymentModes/:id', getPaymentModeById);
+router.put('/paymentModes/:id', updatePaymentMode);
+router.delete('/paymentModes/:id', deletePaymentMode);
 
 module.exports = router;

@@ -2,31 +2,43 @@ const Customer = require('../models/customerModel');
 
 const createCustomer = async (req, res) => {
     try {
-        const { email_id } = req.body;
-        const existingCustomer = await Customer.findOne({ email_id });
-        if (existingCustomer) {
+        const { first_name, last_name, full_name, primary_contact, email_id, city, state, created_by } = req.body;
+
+        // required field 
+        if (!first_name || !last_name || !primary_contact || !email_id || !city || !state || !created_by) {
             return res.status(400).json({
                 success: false,
-                message: 'A customer with this email already exists',
+                message: "Missing required fields",
             });
         }
 
-        const customer = new Customer(req.body);
+        const customer = new Customer({
+            first_name,
+            last_name,
+            full_name,
+            primary_contact,
+            email_id,
+            city,
+            state,
+            created_by
+        });
+
         await customer.save();
 
         return res.status(201).json({
             success: true,
-            message: 'Customer created successfully',
+            message: "Customer created successfully",
             data: customer,
         });
     } catch (error) {
         return res.status(500).json({
             success: false,
-            message: 'Failed to create customer',
+            message: "Failed to create customer",
             error: error.message,
         });
     }
 };
+
 
 
 const getAllCustomers = async (req, res) => {

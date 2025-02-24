@@ -2,10 +2,10 @@ const express = require('express');
 const {  createCallHistory, getAllCallHistory, getCallHistoryById, updateCallHistory, deleteCallHistory } = require('../controllers/callHistoryController');
 const router = express.Router();
 
-router.post('/', createCallHistory);
-router.get('/', getAllCallHistory);
-router.get('/:id', getCallHistoryById);
-router.put('/:id', updateCallHistory);
-router.delete('/:id', deleteCallHistory);
+router.post('/callHistory', createCallHistory);
+router.get('/callHistory', getAllCallHistory);
+router.get('/callHistory/:id', getCallHistoryById);
+router.put('/callHistory/:id', updateCallHistory);
+router.delete('/callHistory/:id', deleteCallHistory);
 
 module.exports = router;

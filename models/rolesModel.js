@@ -1,32 +1,12 @@
-// const mongoose = require('mongoose');
-
-
-// const roleSchema = new mongoose.Schema({
-//     roleId: {
-//         type: Number,
-//         required: true,
-//         unique: true,  
-//     },
-//     roleName: {
-//         type: String,
-//         required: true,
-//         unique: true,  
-//     },
-// });
-
-// const Role = mongoose.model('Role', roleSchema);
-
-// module.exports = Role;
-
-
 const mongoose = require('mongoose');
 
 const roleSchema = new mongoose.Schema({
+  id: { type: Number, required: true, unique: true },
   role: { type: String, required: true },
   role_name: { type: String, required: true },
-  restriction_level: { type: String, default: 'agent' },
+  restriction_level: { type: String, required: true },
   clearance_permission: { type: Number, required: true },
-  role_description: { type: String, default: null },
+  role_description: { type: String, required: true },
   support_user: { type: Number, default: 0 },
   lead_add: { type: Number, default: 0 },
   lead_view: { type: Number, default: 0 },
@@ -52,10 +32,11 @@ const roleSchema = new mongoose.Schema({
   manage_branches: { type: Number, default: 0 },
   manage_org: { type: Number, default: 0 },
   system_settings: { type: Number, default: 0 },
-  created_by: { type: Number, required: true },
+  created_by: { type: String, default: null },
   created_at: { type: Date, default: Date.now },
-  updated_at: { type: Date },
-  deleted_at: { type: Date }
+  updated_at: { type: Date, default: null },
+  deleted_at: { type: Date, default: null }
 });
 
-module.exports = mongoose.model('Role', roleSchema);
+const Role = mongoose.model('Role', roleSchema);
+module.exports = Role;

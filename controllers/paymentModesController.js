@@ -3,8 +3,26 @@ const PaymentMode = require('../models/paymentModesModel');
 // Create a new payment mode
 const createPaymentMode = async (req, res) => {
   try {
-    const newPaymentMode = new PaymentMode(req.body);
+    const { payment_mode_name, fees_type, fees, notes, created_by, branch_id } = req.body;
+
+    if (!payment_mode_name || !branch_id) {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment mode name and branch ID are required',
+      });
+    }
+
+    const newPaymentMode = new PaymentMode({
+      payment_mode_name: payment_mode_name.trim(),
+      fees_type: fees_type || null,
+      fees: fees || null,
+      notes: notes ? notes.trim() : null,
+      created_by: created_by || null,
+      branch_id,
+    });
+
     await newPaymentMode.save();
+
     res.status(201).json({
       success: true,
       message: 'Payment mode created successfully',
@@ -19,10 +37,11 @@ const createPaymentMode = async (req, res) => {
   }
 };
 
-// Get all payment modes
+// Get all payment modes 
 const getAllPaymentModes = async (req, res) => {
   try {
-    const paymentModes = await PaymentMode.find();
+    const paymentModes = await PaymentMode.find({});
+
     res.status(200).json({
       success: true,
       message: 'Payment modes retrieved successfully',
@@ -41,7 +60,7 @@ const getAllPaymentModes = async (req, res) => {
 const getPaymentModeById = async (req, res) => {
   try {
     const { id } = req.params;
-    const paymentMode = await PaymentMode.findById(id);
+    const paymentMode = await PaymentMode.findOne({ _id: id });
 
     if (!paymentMode) {
       return res.status(404).json({
@@ -68,10 +87,11 @@ const getPaymentModeById = async (req, res) => {
 const updatePaymentMode = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedPaymentMode = await PaymentMode.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedPaymentMode = await PaymentMode.findOneAndUpdate(
+      { _id: id, is_deleted: false },
+      { ...req.body, updated_by: req.body.updated_by || null },
+      { new: true, runValidators: true }
+    );
 
     if (!updatedPaymentMode) {
       return res.status(404).json({
@@ -94,23 +114,26 @@ const updatePaymentMode = async (req, res) => {
   }
 };
 
-// Delete payment mode by ID
+// Soft delete payment mode by ID
 const deletePaymentMode = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedPaymentMode = await PaymentMode.findByIdAndDelete(id);
+    const deletedPaymentMode = await PaymentMode.findOneAndUpdate(
+      { _id: id, is_deleted: false },
+      { is_deleted: true },
+      { new: true }
+    );
 
     if (!deletedPaymentMode) {
       return res.status(404).json({
         success: false,
-        message: 'Payment mode not found',
+        message: 'Payment mode not found or already deleted',
       });
     }
 
     res.status(200).json({
       success: true,
       message: 'Payment mode deleted successfully',
-      data: deletedPaymentMode,
     });
   } catch (error) {
     res.status(500).json({

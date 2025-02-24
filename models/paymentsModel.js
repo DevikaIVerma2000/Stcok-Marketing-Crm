@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-// Payment Schema
 const paymentSchema = new mongoose.Schema({
   customer_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -15,7 +14,7 @@ const paymentSchema = new mongoose.Schema({
   team_leader_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'TeamLeader',
-    default: null,
+    required: true,
   },
   parent_team_leader_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -76,7 +75,7 @@ const paymentSchema = new mongoose.Schema({
   approved_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    default: null,
+    required: true,
   },
   approved_date: {
     type: Date,
@@ -85,7 +84,6 @@ const paymentSchema = new mongoose.Schema({
   reference_id: {
     type: String,
     default: null,
-    maxlength: 255,
   },
   notes: {
     type: String,

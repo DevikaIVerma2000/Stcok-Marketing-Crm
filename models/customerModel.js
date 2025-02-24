@@ -37,7 +37,6 @@ const customerSchema = new mongoose.Schema(
     email_id: {
       type: String,
       required: true,
-      unique: true,
     },
     date_of_birth: {
       type: Date,

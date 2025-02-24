@@ -5,17 +5,17 @@ const callHistorySchema = new mongoose.Schema(
     lead_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Lead', 
-      default: null,
+      required: true,
     },
     customer_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Customer', 
-      default: null,
+      required: true,
     },
     compliance_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Compliance', 
-      default: null,
+      ref: 'ComplianceRecords', 
+      required: true,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
