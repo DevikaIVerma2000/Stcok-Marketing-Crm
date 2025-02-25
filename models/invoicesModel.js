@@ -30,7 +30,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   customer_data: {
     type: mongoose.Schema.Types.Mixed, 
-    default: null
+    default: null 
   },
   company_data: {
     type: mongoose.Schema.Types.Mixed, 
@@ -58,6 +58,10 @@ const invoiceSchema = new mongoose.Schema({
     ref: 'User', 
     required: true
   },
+  deleted_at: {
+    type: Date,
+    default: null 
+  }
 }, { timestamps: true, versionKey: false });
 
 const Invoice = mongoose.model('Invoice', invoiceSchema);

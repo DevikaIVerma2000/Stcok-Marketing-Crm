@@ -21,6 +21,7 @@ const scheduleCallbackSchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: ['Pending', 'Completed', 'Missed'], 
+    default: 'Pending',
   },
   callback_time: {
     type: Date,

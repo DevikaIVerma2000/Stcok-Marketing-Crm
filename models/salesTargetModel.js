@@ -8,15 +8,15 @@ const salesTargetSchema = new mongoose.Schema({
   },
   month: {
     type: Number,
-    default: null,
+    required: true,
   },
   year: {
     type: Number,
-    default: null,
+    required: true,
   },
   target: {
     type: mongoose.Schema.Types.Decimal128,
-    default: null,
+    required: true,
   },
   achieved: {
     type: mongoose.Schema.Types.Decimal128,

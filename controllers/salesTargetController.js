@@ -1,9 +1,26 @@
+const mongoose = require('mongoose');
 const SalesTarget = require('../models/salesTargetModel');
 
 // Create a new sales target
 const createSalesTarget = async (req, res) => {
   try {
-    const newSalesTarget = new SalesTarget(req.body);
+    const { user_id, month, year, target, achieved } = req.body;
+
+    if (!user_id || !month || !year || !target) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing required fields',
+      });
+    }
+
+    const newSalesTarget = new SalesTarget({
+      user_id,
+      month,
+      year,
+      target: mongoose.Types.Decimal128.fromString(target.toString()),
+      achieved: achieved ? mongoose.Types.Decimal128.fromString(achieved.toString()) : null,
+    });
+
     await newSalesTarget.save();
     res.status(201).json({
       success: true,
@@ -22,11 +39,15 @@ const createSalesTarget = async (req, res) => {
 // Get all sales targets
 const getAllSalesTargets = async (req, res) => {
   try {
-    const salesTargets = await SalesTarget.find();
+    const salesTargets = await SalesTarget.find().populate('user_id', 'name email'); 
     res.status(200).json({
       success: true,
       message: 'Sales targets retrieved successfully',
-      data: salesTargets,
+      data: salesTargets.map(target => ({
+        ...target._doc,
+        target: parseFloat(target.target.toString()),
+        achieved: target.achieved ? parseFloat(target.achieved.toString()) : 0,
+      })),
     });
   } catch (error) {
     res.status(500).json({
@@ -41,7 +62,7 @@ const getAllSalesTargets = async (req, res) => {
 const getSalesTargetById = async (req, res) => {
   try {
     const { id } = req.params;
-    const salesTarget = await SalesTarget.findById(id);
+    const salesTarget = await SalesTarget.findById(id).populate('user_id', 'name email');
 
     if (!salesTarget) {
       return res.status(404).json({
@@ -53,7 +74,11 @@ const getSalesTargetById = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Sales target retrieved successfully',
-      data: salesTarget,
+      data: {
+        ...salesTarget._doc,
+        target: parseFloat(salesTarget.target.toString()),
+        achieved: salesTarget.achieved ? parseFloat(salesTarget.achieved.toString()) : 0,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -68,7 +93,16 @@ const getSalesTargetById = async (req, res) => {
 const updateSalesTarget = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedSalesTarget = await SalesTarget.findByIdAndUpdate(id, req.body, {
+    const updates = { ...req.body };
+
+    if (updates.target) {
+      updates.target = mongoose.Types.Decimal128.fromString(updates.target.toString());
+    }
+    if (updates.achieved) {
+      updates.achieved = mongoose.Types.Decimal128.fromString(updates.achieved.toString());
+    }
+
+    const updatedSalesTarget = await SalesTarget.findByIdAndUpdate(id, updates, {
       new: true,
       runValidators: true,
     });
@@ -83,7 +117,11 @@ const updateSalesTarget = async (req, res) => {
     res.status(200).json({
       success: true,
       message: 'Sales target updated successfully',
-      data: updatedSalesTarget,
+      data: {
+        ...updatedSalesTarget._doc,
+        target: parseFloat(updatedSalesTarget.target.toString()),
+        achieved: updatedSalesTarget.achieved ? parseFloat(updatedSalesTarget.achieved.toString()) : 0,
+      },
     });
   } catch (error) {
     res.status(500).json({
