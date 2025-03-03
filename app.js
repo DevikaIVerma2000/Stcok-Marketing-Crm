@@ -72,7 +72,7 @@ app.use('/api/', complianceRecordsRoutes);
 app.use('/api', departmentRoutes);
 app.use('/api', designationsRoutes);
 app.use('/employeeSales', employeeSalesRoutes);
-app.use('/employmentDetails', employmentDetailsRoutes);
+app.use('/api', employmentDetailsRoutes);
 app.use('/api', invoiceRoutes);
 app.use('/api', leadsRoutes);
 app.use('/api', leadSourceRoutes);

@@ -2,27 +2,27 @@ const mongoose = require('mongoose');
 
 const employmentDetailsSchema = new mongoose.Schema({
   user_id: {
-    type: mongoose.Schema.Types.BigInt,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
   },
   role_id: {
-    type: mongoose.Schema.Types.BigInt,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Role',
   },
   department_id: {
-    type: mongoose.Schema.Types.BigInt,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Department',
   },
   designation_id: {
-    type: mongoose.Schema.Types.BigInt,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'Designation',
   },
   ctc_salary: {
-    type: mongoose.Schema.Types.BigInt,
+    type: Number,
     required: true,
   },
   employment_status: {
@@ -47,7 +47,7 @@ const employmentDetailsSchema = new mongoose.Schema({
     type: Date,
   },
   created_by: {
-    type: mongoose.Schema.Types.BigInt,
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: 'User',
   },
