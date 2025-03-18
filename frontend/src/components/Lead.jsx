@@ -52,7 +52,7 @@ const Leads = () => {
         <div className="bg-white rounded-lg shadow">
           <div className="p-4 flex flex-wrap items-center justify-between gap-4">
             <button
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/dashboard')}
               className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />

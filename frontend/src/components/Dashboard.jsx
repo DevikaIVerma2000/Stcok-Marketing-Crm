@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AgentPerformance from "./AgentPerformance";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
   const stats = [
     { label: "Customer Enrolled - Today", value: "0" },
     { label: "Sales Amount - Today", value: "0" },
@@ -11,10 +12,14 @@ const Dashboard = () => {
     { label: "Sales Amount - Current Month", value: "0" },
   ];
 
+  const toggleAdminMenu = () => {
+    setIsAdminMenuOpen(!isAdminMenuOpen);
+  };
+
   return (
     <div className="bg-gray-100 h-screen font-sans">
       {/* Header and Navigation */}
-      <div className="bg-blue-900 text-white py-4 px-6 flex items-center justify-between shadow-md">
+      <div className="bg-[#004f83] text-white py-4 px-6 flex items-center justify-between shadow-md">
         <div className="flex items-center">
           <span className="text-xl font-bold mr-4">TRUPOINT</span>
           <span className="text-sm">TRUPOINT RESEARCH ANALYST CRM</span>
@@ -25,15 +30,15 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="bg-blue-800 text-white py-2 px-6">
+      <div className="bg-blue-600 text-white py-2 px-6">
         <h2 className="text-xl font-semibold">Welcome</h2>
       </div>
 
       <div className="flex">
         {/* Sidebar */}
-        <div className="bg-blue-900 text-white w-64 py-6 px-3 space-y-3">
+        <div className="bg-[#004f83] text-white w-64 py-6 px-3 space-y-3">
           <div className="font-semibold text-lg px-2"></div>
-          <ul className="space-y-2">
+          <ul className="space-y-[-4px]">
             <li>
               <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
                 Dashboard
@@ -42,33 +47,43 @@ const Dashboard = () => {
             <li>
               <button
                 className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                onClick={() => navigate("/leads")} // Navigate to Leads page
+                onClick={() => navigate("/leads")}
               >
                 Leads
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/sales-lead")}
+              >
                 Sales Lead
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/customers")}
+              >
                 Customers
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/all-packages-invoices")}
+              >
                 List Packages
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/customer-payments")}
+              >
                 List Payments
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/customer-invoices")}
+              >
                 List Invoices
               </button>
             </li>
@@ -78,14 +93,58 @@ const Dashboard = () => {
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/quality-analysis")}
+              >
                 Quality Analysis
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={toggleAdminMenu}
+              >
                 Admin
               </button>
+              {isAdminMenuOpen && (
+                <ul className="space-y-[-4px] pl-4">
+                  <li>
+                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                    onClick={() => navigate("/list-users")}
+                    >
+                      Manage Users
+                    </button>
+                  </li>
+                  <li>
+                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                    onClick={() => navigate("/team-list")}
+                    >
+                      Manage Teams
+                    </button>
+                  </li>
+                  <li>
+                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                    onClick={() => navigate("/manage-lead-sources")}
+                    >
+                      Manage Source
+                    </button>
+                  </li>
+                  <li>
+                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                    onClick={() => navigate("/manage-marketing-agencies")}
+                    >
+                      Manage Agency
+                    </button>
+                  </li>
+                  <li>
+                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                    onClick={() => navigate("/upload-leads")}
+                    >
+                      Upload Leads
+                    </button>
+                  </li>
+                </ul>
+              )}
             </li>
             <li>
               <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
@@ -104,7 +163,7 @@ const Dashboard = () => {
             </li>
           </ul>
           <div className="absolute bottom-4 left-0 w-full px-3">
-            <div className="bg-blue-800 rounded-md p-2 flex items-center">
+            <div className="bg-[#004f83] rounded-md p-2 flex items-center">
               <div className="w-8 h-8 rounded-full bg-gray-400 mr-2 flex items-center justify-center">
                 {/* You can add an icon or initials here */}
                 <svg
@@ -135,7 +194,7 @@ const Dashboard = () => {
           {/* Navigation Tabs */}
           <div className="bg-white shadow rounded-md mb-6">
             <div className="flex border-b border-gray-200">
-              <button className="py-3 px-4 bg-blue-500 text-white font-semibold text-sm focus:outline-none rounded-tl-md rounded-tr-md">
+              <button className="py-3 px-4 bg-[#004f83]-500 text-white font-semibold text-sm focus:outline-none rounded-tl-md rounded-tr-md">
                 Dashboard
               </button>
               <button
@@ -145,12 +204,12 @@ const Dashboard = () => {
                 Agent Performance
               </button>
               <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
-               onClick={() => navigate("/team-performance")}
-               >
+                onClick={() => navigate("/team-performance")}
+              >
                 Team Performance
               </button>
               <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
-               onClick={() => navigate("/fresh-lead-stats")}
+                onClick={() => navigate("/fresh-lead-stats")}
               >
                 Fresh Lead Stats
               </button>
@@ -226,4 +285,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Dashboard; 
