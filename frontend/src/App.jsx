@@ -18,6 +18,10 @@ import TeamList from "./components/TeamList";
 import ManageLeadSources from "./components/ManageLeadSources";
 import ManageMarketingAgencies from "./components/ManageMarketingAgencies";
 import UploadLeads from "./components/UploadLeads";
+import LeadsTable from "./components/LeadsTable";
+import ManageAttendanceRequest from "./components/ManageAttendanceRequest";
+import CompanyConfig from "./components/CompanyConfig";
+import ListOfReports from "./components/ListOfReports";
 
 const App = () => {
   return (
@@ -41,6 +45,11 @@ const App = () => {
         <Route path="/manage-lead-sources" element={<ManageLeadSources />} />
         <Route path="/manage-marketing-agencies" element={<ManageMarketingAgencies />} />
         <Route path="/upload-leads" element={<UploadLeads />} />
+        <Route path="/leads-table" element={<LeadsTable />} />
+        <Route path="/manage-attendance-request" element={<ManageAttendanceRequest />} />
+        <Route path="/company-config" element={<CompanyConfig />} />
+        <Route path="/list-of-reports" element={<ListOfReports />} />
+
       </Routes>
     </Router>
   );

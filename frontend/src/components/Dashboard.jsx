@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import AgentPerformance from "./AgentPerformance";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [isAdminMenuOpen, setIsAdminMenuOpen] = useState(false);
+  const [isManagementMenuOpen, setIsManagementMenuOpen] = useState(false);
+  const [isCompanyMenuOpen, setIsCompanyMenuOpen] = useState(false);
   const stats = [
     { label: "Customer Enrolled - Today", value: "0" },
     { label: "Sales Amount - Today", value: "0" },
@@ -14,6 +15,24 @@ const Dashboard = () => {
 
   const toggleAdminMenu = () => {
     setIsAdminMenuOpen(!isAdminMenuOpen);
+    if (!isAdminMenuOpen) {
+      setIsManagementMenuOpen(false); // Close Management if opening Admin
+    }
+  };
+
+  const toggleManagementMenu = () => {
+    setIsManagementMenuOpen(!isManagementMenuOpen);
+    if (!isManagementMenuOpen) {
+      setIsAdminMenuOpen(false); // Close Admin if opening Management
+    }
+  };
+
+  const toggleCompanyMenu = () => {
+    setIsCompanyMenuOpen(!isCompanyMenuOpen);
+    if (!isCompanyMenuOpen) {
+      setIsAdminMenuOpen(false);
+      setIsManagementMenuOpen(false);
+    }
   };
 
   return (
@@ -53,35 +72,40 @@ const Dashboard = () => {
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/sales-lead")}
               >
                 Sales Lead
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/customers")}
               >
                 Customers
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/all-packages-invoices")}
               >
                 List Packages
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/customer-payments")}
               >
                 List Payments
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/customer-invoices")}
               >
                 List Invoices
@@ -93,7 +117,8 @@ const Dashboard = () => {
               </button>
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
                 onClick={() => navigate("/quality-analysis")}
               >
                 Quality Analysis
@@ -101,7 +126,9 @@ const Dashboard = () => {
             </li>
             <li>
               <button
-                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                className={`block py-2 px-4 hover:bg-blue-800 w-full text-left ${
+                  isAdminMenuOpen ? "bg-blue-800" : ""
+                }`}
                 onClick={toggleAdminMenu}
               >
                 Admin
@@ -109,36 +136,41 @@ const Dashboard = () => {
               {isAdminMenuOpen && (
                 <ul className="space-y-[-4px] pl-4">
                   <li>
-                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                    onClick={() => navigate("/list-users")}
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/list-users")}
                     >
                       Manage Users
                     </button>
                   </li>
                   <li>
-                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                    onClick={() => navigate("/team-list")}
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/team-list")}
                     >
                       Manage Teams
                     </button>
                   </li>
                   <li>
-                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                    onClick={() => navigate("/manage-lead-sources")}
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/manage-lead-sources")}
                     >
                       Manage Source
                     </button>
                   </li>
                   <li>
-                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                    onClick={() => navigate("/manage-marketing-agencies")}
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/manage-marketing-agencies")}
                     >
                       Manage Agency
                     </button>
                   </li>
                   <li>
-                    <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-                    onClick={() => navigate("/upload-leads")}
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/upload-leads")}
                     >
                       Upload Leads
                     </button>
@@ -147,17 +179,60 @@ const Dashboard = () => {
               )}
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button
+                className={`block py-2 px-4 hover:bg-blue-800 w-full text-left ${
+                  isManagementMenuOpen ? "bg-blue-800" : ""
+                }`}
+                onClick={toggleManagementMenu}
+              >
                 Management
               </button>
+              {isManagementMenuOpen && (
+                <ul className="space-y-[-4px] pl-4">
+                  <li>
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/leads-table")}
+                    >
+                      Lead Management
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/manage-attendance-request")}
+                    >
+                      Attendance Management
+                    </button>
+                  </li>
+                </ul>
+              )}
             </li>
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={toggleCompanyMenu}
+              >
                 Company
               </button>
+              {isCompanyMenuOpen && (
+                <ul className="space-y-[-4px] pl-4">
+                  <li>
+                    <button
+                      className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                      onClick={() => navigate("/company-config")}
+                    >
+                      Config
+                    </button>
+                  </li>
+                </ul>
+              )}
             </li>
+
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
+              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+              onClick={() => navigate("/list-of-reports")}
+              >
                 Reports
               </button>
             </li>
@@ -203,12 +278,14 @@ const Dashboard = () => {
               >
                 Agent Performance
               </button>
-              <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
+              <button
+                className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
                 onClick={() => navigate("/team-performance")}
               >
                 Team Performance
               </button>
-              <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
+              <button
+                className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100"
                 onClick={() => navigate("/fresh-lead-stats")}
               >
                 Fresh Lead Stats
@@ -285,4 +362,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
