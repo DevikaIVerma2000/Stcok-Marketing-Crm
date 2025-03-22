@@ -22,6 +22,8 @@ import LeadsTable from "./components/LeadsTable";
 import ManageAttendanceRequest from "./components/ManageAttendanceRequest";
 import CompanyConfig from "./components/CompanyConfig";
 import ListOfReports from "./components/ListOfReports";
+import EmployeeWorkingStatus from "./components/EmployeeWorkingStatus";
+
 
 const App = () => {
   return (
@@ -49,6 +51,7 @@ const App = () => {
         <Route path="/manage-attendance-request" element={<ManageAttendanceRequest />} />
         <Route path="/company-config" element={<CompanyConfig />} />
         <Route path="/list-of-reports" element={<ListOfReports />} />
+        <Route path="/employee-working-status" element={<EmployeeWorkingStatus />} />
 
       </Routes>
     </Router>

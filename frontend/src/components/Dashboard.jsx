@@ -290,7 +290,8 @@ const Dashboard = () => {
               >
                 Fresh Lead Stats
               </button>
-              <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100 rounded-tr-md">
+              <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100 rounded-tr-md"
+              onClick={() => navigate("/employee-working-status")}>
                 Employee Working Status
               </button>
             </div>
