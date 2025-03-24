@@ -1,36 +1,186 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Users, Plus, ArrowLeft, UserPlus } from 'lucide-react';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Users, Plus, ArrowLeft, UserPlus } from "lucide-react";
 
 const ListUsers = () => {
   const navigate = useNavigate();
 
-  const usersData = [
-    { empId: "TRU-0000", fullName: "Super Admin", username: "root", role: "Owner", designation: "Owner", department: "Management" },
-    { empId: "TRU-0001", fullName: "Business Owner", username: "owner", role: "Owner", designation: "Owner", department: "Management" },
-    { empId: "TRU-0003", fullName: "Team Manager 1", username: "teammanager1", role: "Team Manager", designation: "Team Manager", department: "Sales" },
-    { empId: "TRU-0004", fullName: "Team Leader 1", username: "teamleader1", role: "Team Leader", designation: "Team Leader", department: "Sales" },
-    { empId: "TRU-0005", fullName: "Agent 1 Team 1", username: "agent1t1", role: "Agent", designation: "Sr Sales Advisor", department: "Sales" },
-    { empId: "TRU-0006", fullName: "Agent 1 Team 2", username: "agent1t2", role: "Agent", designation: "Jr Sales Advisor", department: "Sales" },
-    { empId: "TRU-0007", fullName: "Team Leader 2", username: "teamleader2", role: "Team Leader", designation: "Team Leader", department: "Sales" },
-    { empId: "TRU-0008", fullName: "Team Leader 3", username: "teamleader3", role: "Team Leader", designation: "Team Leader", department: "Sales" },
-    { empId: "TRU-0009", fullName: "Branch Owner 1", username: "branch.owner1", role: "Branch Owner", designation: "Branch Owner", department: "Management" },
-    { empId: "TRU-0010", fullName: "Agent 1 Team 3", username: "agent1t3", role: "Agent", designation: "Sr Sales Advisor", department: "Sales" },
+  const handleAddUserClick = () => {
+    navigate("/add-user");
+  };
+
+  const handleEditUserClick = () => {
+    navigate("/edit-user/:id");
+  };
+
+  const initialUsersData = [
+    {
+      empId: "TRU-0000",
+      fullName: "Super Admin",
+      username: "root",
+      role: "Owner",
+      designation: "Owner",
+      department: "Management",
+    },
+    {
+      empId: "TRU-0001",
+      fullName: "Business Owner",
+      username: "owner",
+      role: "Owner",
+      designation: "Owner",
+      department: "Management",
+    },
+    {
+      empId: "TRU-0003",
+      fullName: "Team Manager 1",
+      username: "teammanager1",
+      role: "Team Manager",
+      designation: "Team Manager",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0004",
+      fullName: "Team Leader 1",
+      username: "teamleader1",
+      role: "Team Leader",
+      designation: "Team Leader",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0005",
+      fullName: "Agent 1 Team 1",
+      username: "agent1t1",
+      role: "Agent",
+      designation: "Sr Sales Advisor",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0006",
+      fullName: "Agent 1 Team 2",
+      username: "agent1t2",
+      role: "Agent",
+      designation: "Jr Sales Advisor",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0007",
+      fullName: "Team Leader 2",
+      username: "teamleader2",
+      role: "Team Leader",
+      designation: "Team Leader",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0008",
+      fullName: "Team Leader 3",
+      username: "teamleader3",
+      role: "Team Leader",
+      designation: "Team Leader",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-0009",
+      fullName: "Branch Owner 1",
+      username: "branch.owner1",
+      role: "Branch Owner",
+      designation: "Branch Owner",
+      department: "Management",
+    },
+    {
+      empId: "TRU-0010",
+      fullName: "Agent 1 Team 3",
+      username: "agent1t3",
+      role: "Agent",
+      designation: "Sr Sales Advisor",
+      department: "Sales",
+    },
   ];
+
+  const additionalUsersData = [
+    {
+      empId: "TRU-0012",
+      fullName: "Agent 2 Team 2",
+      username: "agent2.t12",
+      role: "Agent",
+      designation: "Jr Sales Advisor",
+      department: "Management",
+    },
+    {
+      empId: "TRU-0013",
+      fullName: "Admin Assist",
+      username: "admin.assist1",
+      role: "Admin Assist",
+      designation: "Admin Assist",
+      department: "Support",
+    },
+    {
+      empId: "TRU-0014",
+      fullName: "Compliance Manager BRI",
+      username: "compliance.bri",
+      role: "Compliance Manager",
+      designation: "Compliance Manager",
+      department: "Support",
+    },
+    {
+      empId: "TRU-SAN-0001",
+      fullName: "Branch Owner 3",
+      username: "branch.owner3",
+      role: "Branch Owner",
+      designation: "Branch Owner",
+      department: "Management",
+    },
+    {
+      empId: "TRU-VA-0001",
+      fullName: "Branch Owner 2",
+      username: "branch.owner2",
+      role: "Branch Owner",
+      designation: "Branch Owner",
+      department: "Management",
+    },
+    {
+      empId: "TRU-VA-0002",
+      fullName: "Branch Manager BR2",
+      username: "branch.managerbr2",
+      role: "Branch Manager",
+      designation: "Branch Manager",
+      department: "Management",
+    },
+    {
+      empId: "TRU-VA-0003",
+      fullName: "Team Leader BR 2",
+      username: "team.leaderbr2",
+      role: "Team Leader",
+      designation: "Team Leader",
+      department: "Sales",
+    },
+    {
+      empId: "TRU-VA-0004",
+      fullName: "Agent 1 BR 2 TL 1",
+      username: "agent1.br2",
+      role: "Agent",
+      designation: "Jr Sales Advisor",
+      department: "Sales",
+    },
+  ];
+
+  const allUsersData = [...initialUsersData, ...additionalUsersData];
 
   const [showEntries, setShowEntries] = React.useState(10);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [currentPage, setCurrentPage] = React.useState(1);
 
-  const filteredUsers = usersData.filter(user =>
-    Object.values(user).some(value =>
+  const filteredUsers = allUsersData.filter((user) =>
+    Object.values(user).some((value) =>
       String(value).toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
 
   const totalPages = Math.ceil(filteredUsers.length / showEntries);
   const startIndex = (currentPage - 1) * showEntries;
-  const displayedUsers = filteredUsers.slice(startIndex, startIndex + showEntries);
+  const displayedUsers = filteredUsers.slice(
+    startIndex,
+    startIndex + showEntries
+  );
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -40,22 +190,22 @@ const ListUsers = () => {
           <Users className="h-6 w-6 mr-2" />
           <span className="text-xl font-bold">TRUPOINT</span>
         </div>
-        
+
         <nav>
           {[
-            ['Dashboard', '/dashboard'],
-            ['Leads', '/leads'],
-            ['Sales Lead', '/sales-lead'],
-            ['Customers', '/customers'],
-            ['List Packages', '/list-packages'],
-            ['List Payments', '/list-payments'],
-            ['List Invoices', '/list-invoices'],
-            ['Stock Tips', '/stock-tips'],
-            ['Quality Analysis', '/quality-analysis'],
-            ['Admin', '/admin'],
-            ['Management', '/management'],
-            ['Company', '/company'],
-            ['Reports', '/reports'],
+            ["Dashboard", "/dashboard"],
+            ["Leads", "/leads"],
+            ["Sales Lead", "/sales-lead"],
+            ["Customers", "/customers"],
+            ["List Packages", "/list-packages"],
+            ["List Payments", "/list-payments"],
+            ["List Invoices", "/list-invoices"],
+            ["Stock Tips", "/stock-tips"],
+            ["Quality Analysis", "/quality-analysis"],
+            ["Admin", "/admin"],
+            ["Management", "/management"],
+            ["Company", "/company"],
+            ["Reports", "/reports"],
           ].map(([name, path]) => (
             <button
               key={path}
@@ -94,7 +244,10 @@ const ListUsers = () => {
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Former Employees
               </button>
-              <button className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+              <button
+                className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                onClick={handleAddUserClick}
+              >
                 <UserPlus className="w-5 h-5 mr-2" />
                 Add User
               </button>
@@ -110,8 +263,10 @@ const ListUsers = () => {
                   value={showEntries}
                   onChange={(e) => setShowEntries(Number(e.target.value))}
                 >
-                  {[10, 25, 50, 100].map(value => (
-                    <option key={value} value={value}>{value}</option>
+                  {[10, 25, 50, 100].map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
                   ))}
                 </select>
                 <span className="text-sm text-gray-600">entries</span>
@@ -132,7 +287,14 @@ const ListUsers = () => {
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    {['Emp ID', 'Full Name', 'Username', 'Role', 'Designation', 'Department'].map((header) => (
+                    {[
+                      "Emp ID",
+                      "Full Name",
+                      "Username",
+                      "Role",
+                      "Designation",
+                      "Department",
+                    ].map((header) => (
                       <th
                         key={header}
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -145,12 +307,25 @@ const ListUsers = () => {
                 <tbody className="divide-y divide-gray-200">
                   {displayedUsers.map((user) => (
                     <tr key={user.empId} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">{user.empId}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.fullName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.username}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.role}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.designation}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.department}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600"
+                        onClick={handleEditUserClick}>
+                        {user.empId}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {user.fullName}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.username}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.role}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.designation}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {user.department}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -159,31 +334,37 @@ const ListUsers = () => {
 
             <div className="px-6 py-4 flex items-center justify-between border-t border-gray-200">
               <div className="text-sm text-gray-700">
-                Showing {startIndex + 1} to {Math.min(startIndex + showEntries, filteredUsers.length)} of {filteredUsers.length} entries
+                Showing {startIndex + 1} to{" "}
+                {Math.min(startIndex + showEntries, filteredUsers.length)} of{" "}
+                {filteredUsers.length} entries
               </div>
               <div className="flex space-x-1">
                 <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   className="px-3 py-1 rounded border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >
                   Previous
                 </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    onClick={() => setCurrentPage(page)}
-                    className={`px-3 py-1 rounded text-sm font-medium ${
-                      currentPage === page
-                        ? 'bg-blue-600 text-white'
-                        : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    {page}
-                  </button>
-                ))}
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`px-3 py-1 rounded text-sm font-medium ${
+                        currentPage === page
+                          ? "bg-blue-600 text-white"
+                          : "border border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  )
+                )}
                 <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(totalPages, p + 1))
+                  }
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 rounded border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
                 >

@@ -57,7 +57,7 @@ const initialLeads = [
 const Leads = () => {
   const navigate = useNavigate();
   const [leads, setLeads] = useState(initialLeads);
-  const [allLeads, setAllLeads] = useState(initialLeads); // Store all leads for filtering
+  const [allLeads, setAllLeads] = useState(initialLeads);
   const [searchTerm, setSearchTerm] = useState("");
   const [entriesPerPage, setEntriesPerPage] = useState("10");
   const [currentPage, setCurrentPage] = useState(1);
@@ -153,7 +153,9 @@ const Leads = () => {
     <>
       <header className="bg-blue-900 text-white shadow-sm">
         <div className="flex justify-between items-center px-6 py-4">
-          <h2 className="text-xl font-semibold">TRUPOINT RESEARCH ANALYST CRM</h2>
+          <h2 className="text-xl font-semibold">
+            TRUPOINT RESEARCH ANALYST CRM
+          </h2>
           <div className="flex items-center space-x-4">
             <span>Time: {format(currentTime, "HH:mm:ss")}</span>
             <span>Date: {format(currentTime, "dd-MM-yyyy")}</span>
@@ -175,7 +177,9 @@ const Leads = () => {
             <div className="flex items-center space-x-4">
               <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700">
                 Follow-Up Leads
-                <span className="ml-2 px-2 py-0.5 bg-white text-blue-600 rounded-full">4</span>
+                <span className="ml-2 px-2 py-0.5 bg-white text-blue-600 rounded-full">
+                  4
+                </span>
               </button>
 
               <button
@@ -183,7 +187,9 @@ const Leads = () => {
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700"
               >
                 Fresh Leads
-                <span className="ml-2 px-2 py-0.5 bg-white text-blue-600 rounded-full">18344</span>
+                <span className="ml-2 px-2 py-0.5 bg-white text-blue-600 rounded-full">
+                  18344
+                </span>
               </button>
 
               <button
@@ -279,7 +285,16 @@ const Leads = () => {
                           {lead.followUpDate}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {lead.fullName}
+                          <button
+                            onClick={() =>
+                              navigate(`/lead-details/${index}`, {
+                                state: { lead },
+                              })
+                            }
+                            className="text-blue-600 hover:underline"
+                          >
+                            {lead.fullName}
+                          </button>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {lead.phoneNumber}
@@ -327,8 +342,8 @@ const Leads = () => {
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-gray-700">
                 Showing {(currentPage - 1) * Number(entriesPerPage) + 1} to{" "}
-                {Math.min(currentPage * Number(entriesPerPage), totalEntries)} of{" "}
-                {totalEntries} entries
+                {Math.min(currentPage * Number(entriesPerPage), totalEntries)}{" "}
+                of {totalEntries} entries
               </div>
               <div className="flex space-x-2">
                 <button
@@ -421,7 +436,9 @@ const Leads = () => {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Primary Contact</label>
+              <label className="block text-gray-700 mb-2">
+                Primary Contact
+              </label>
               <input
                 type="text"
                 value={newLead.primaryContact}
