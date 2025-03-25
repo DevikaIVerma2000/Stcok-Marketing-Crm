@@ -4,7 +4,7 @@ const leadSourcesSchema = new mongoose.Schema(
   {
     source_name: {
       type: String,
-      required: true, 
+      required: true,
     },
     source_description: {
       type: String,

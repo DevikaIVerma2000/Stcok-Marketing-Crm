@@ -1,464 +1,3 @@
-// import React, { useState } from "react";
-// import { useLocation, useNavigate } from "react-router-dom";
-
-// const EditUser = () => {
-//   const { state } = useLocation();
-//   const navigate = useNavigate();
-//   const { user } = state || {};
-
-//   // State to manage form data
-//   const [formData, setFormData] = useState({
-//     empId: user?.empId || "",
-//     firstName: user?.fullName?.split(" ")[0] || "",
-//     middleName: "",
-//     lastName: user?.fullName?.split(" ").slice(1).join(" ") || "",
-//     fullName: user?.fullName || "",
-//     email: user?.email || "",
-//     primaryContact: user?.primaryContact || "",
-//     username: user?.username || "",
-//     dateOfBirth: user?.dateOfBirth || "",
-//     gender: user?.gender || "",
-//     maritalStatus: user?.maritalStatus || "",
-//     bloodGroup: user?.bloodGroup || "",
-//     headOfficeBranch: user?.headOfficeBranch || "",
-//     address: user?.address || "",
-//     city: user?.city || "",
-//     state: user?.state || "",
-//     pincode: user?.pincode || "",
-//     country: user?.country || "INDIA",
-//     emergencyContactName: user?.emergencyContactName || "",
-//     emergencyContactRelation: user?.emergencyContactRelation || "",
-//     emergencyContactNumber: user?.emergencyContactNumber || "",
-//     bankName: user?.bankName || "",
-//     bankIfscCode: user?.bankIfscCode || "",
-//     bankAccountNumber: user?.bankAccountNumber || "",
-//     panCard: user?.panCard || "",
-//     aadhaarCard: user?.aadhaarCard || "",
-//   });
-
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({ ...prev, [name]: value }));
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     // Handle form submission (e.g., API call to update user)
-//     console.log("Updated user data:", formData);
-//     // Navigate back to the ListUsers page after submission
-//     navigate("/list-users");
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-gray-100 p-8">
-//       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6">
-//         <h1 className="text-2xl font-bold text-gray-900 mb-6">
-//           Edit User - {formData.fullName}
-//         </h1>
-
-//         <div className="flex space-x-4 mb-6">
-//           <button className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-//             User Basic Info
-//           </button>
-//           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-//             Employment Details
-//           </button>
-//           <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-//             Reset Password
-//           </button>
-//         </div>
-
-//         <form onSubmit={handleSubmit}>
-//           {/* Basic Info */}
-//           <div className="mb-6">
-//             <h2 className="text-lg font-semibold text-gray-700 mb-4">
-//               Basic Info
-//             </h2>
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-//               <div>
-//                 <label className="block text-sm text-gray-600">Employee ID</label>
-//                 <input
-//                   type="text"
-//                   name="empId"
-//                   value={formData.empId}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                   readOnly
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">First Name</label>
-//                 <input
-//                   type="text"
-//                   name="firstName"
-//                   value={formData.firstName}
-//                   onChange={handleChange}
-//                   placeholder="Enter First Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Middle Name</label>
-//                 <input
-//                   type="text"
-//                   name="middleName"
-//                   value={formData.middleName}
-//                   onChange={handleChange}
-//                   placeholder="Middle Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Last Name</label>
-//                 <input
-//                   type="text"
-//                   name="lastName"
-//                   value={formData.lastName}
-//                   onChange={handleChange}
-//                   placeholder="Last Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Full Name</label>
-//                 <input
-//                   type="text"
-//                   name="fullName"
-//                   value={formData.fullName}
-//                   onChange={handleChange}
-//                   placeholder="Enter Valid Full Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Email</label>
-//                 <input
-//                   type="email"
-//                   name="email"
-//                   value={formData.email}
-//                   onChange={handleChange}
-//                   placeholder="Enter Valid Email Address"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Primary Contact</label>
-//                 <input
-//                   type="text"
-//                   name="primaryContact"
-//                   value={formData.primaryContact}
-//                   onChange={handleChange}
-//                   placeholder="Enter Valid Number"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Username</label>
-//                 <input
-//                   type="text"
-//                   name="username"
-//                   value={formData.username}
-//                   onChange={handleChange}
-//                   placeholder="Enter Username"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Date of Birth</label>
-//                 <input
-//                   type="text"
-//                   name="dateOfBirth"
-//                   value={formData.dateOfBirth}
-//                   onChange={handleChange}
-//                   placeholder="DD-MM-YYYY"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Gender</label>
-//                 <select
-//                   name="gender"
-//                   value={formData.gender}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                 >
-//                   <option value="">Select Gender</option>
-//                   <option value="Male">Male</option>
-//                   <option value="Female">Female</option>
-//                   <option value="Other">Other</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Marital Status</label>
-//                 <select
-//                   name="maritalStatus"
-//                   value={formData.maritalStatus}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                 >
-//                   <option value="">Select Marital Status</option>
-//                   <option value="Single">Single</option>
-//                   <option value="Married">Married</option>
-//                   <option value="Divorced">Divorced</option>
-//                   <option value="Widowed">Widowed</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Blood Group</label>
-//                 <select
-//                   name="bloodGroup"
-//                   value={formData.bloodGroup}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                 >
-//                   <option value="">Blood Group</option>
-//                   <option value="A+">A+</option>
-//                   <option value="A-">A-</option>
-//                   <option value="B+">B+</option>
-//                   <option value="B-">B-</option>
-//                   <option value="AB+">AB+</option>
-//                   <option value="AB-">AB-</option>
-//                   <option value="O+">O+</option>
-//                   <option value="O-">O-</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Head Office Branch</label>
-//                 <select
-//                   name="headOfficeBranch"
-//                   value={formData.headOfficeBranch}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                 >
-//                   <option value="">Select Head Office Branch</option>
-//                   <option value="Branch 1">Branch 1</option>
-//                   <option value="Branch 2">Branch 2</option>
-//                 </select>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Address */}
-//           <div className="mb-6">
-//             <h2 className="text-lg font-semibold text-gray-700 mb-4">Address</h2>
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-//               <div className="col-span-2">
-//                 <label className="block text-sm text-gray-600">Address</label>
-//                 <textarea
-//                   name="address"
-//                   value={formData.address}
-//                   onChange={handleChange}
-//                   placeholder="Address"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">City</label>
-//                 <input
-//                   type="text"
-//                   name="city"
-//                   value={formData.city}
-//                   onChange={handleChange}
-//                   placeholder="City"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">State</label>
-//                 <select
-//                   name="state"
-//                   value={formData.state}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                 >
-//                   <option value="">Select State</option>
-//                   <option value="State 1">State 1</option>
-//                   <option value="State 2">State 2</option>
-//                 </select>
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Pincode</label>
-//                 <input
-//                   type="text"
-//                   name="pincode"
-//                   value={formData.pincode}
-//                   onChange={handleChange}
-//                   placeholder="Pincode"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Country</label>
-//                 <input
-//                   type="text"
-//                   name="country"
-//                   value={formData.country}
-//                   onChange={handleChange}
-//                   className="w-full border rounded px-3 py-2"
-//                   readOnly
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Emergency Contact Information */}
-//           <div className="mb-6">
-//             <h2 className="text-lg font-semibold text-gray-700 mb-4">
-//               Emergency Contact Information
-//             </h2>
-//             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//               <div>
-//                 <label className="block text-sm text-gray-600">Emergency Contact Name</label>
-//                 <input
-//                   type="text"
-//                   name="emergencyContactName"
-//                   value={formData.emergencyContactName}
-//                   onChange={handleChange}
-//                   placeholder="Emergency Contact Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Emergency Contact Relation</label>
-//                 <input
-//                   type="text"
-//                   name="emergencyContactRelation"
-//                   value={formData.emergencyContactRelation}
-//                   onChange={handleChange}
-//                   placeholder="Emergency Contact Relation"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Emergency Contact Number</label>
-//                 <input
-//                   type="text"
-//                   name="emergencyContactNumber"
-//                   value={formData.emergencyContactNumber}
-//                   onChange={handleChange}
-//                   placeholder="Enter 10 Digit Mobile Number"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Bank Details */}
-//           <div className="mb-6">
-//             <h2 className="text-lg font-semibold text-gray-700 mb-4">Bank Details</h2>
-//             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//               <div>
-//                 <label className="block text-sm text-gray-600">Bank Name</label>
-//                 <input
-//                   type="text"
-//                   name="bankName"
-//                   value={formData.bankName}
-//                   onChange={handleChange}
-//                   placeholder="Enter Bank Name"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Bank IFSC Code</label>
-//                 <input
-//                   type="text"
-//                   name="bankIfscCode"
-//                   value={formData.bankIfscCode}
-//                   onChange={handleChange}
-//                   placeholder="Enter Bank IFSC Code"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Account Number</label>
-//                 <input
-//                   type="text"
-//                   name="bankAccountNumber"
-//                   value={formData.bankAccountNumber}
-//                   onChange={handleChange}
-//                   placeholder="Enter Account Number"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div className="col-span-3">
-//                 <label className="block text-sm text-gray-600">Upload Bank Proof</label>
-//                 <input
-//                   type="file"
-//                   accept=".jpg,.jpeg,.pdf"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//                 <p className="text-sm text-gray-500">
-//                   Only jpg, jpeg, pdf files. Max size of 1MB.
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* KYC Details */}
-//           <div className="mb-6">
-//             <h2 className="text-lg font-semibold text-gray-700 mb-4">KYC Details</h2>
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//               <div>
-//                 <label className="block text-sm text-gray-600">PAN Card</label>
-//                 <input
-//                   type="text"
-//                   name="panCard"
-//                   value={formData.panCard}
-//                   onChange={handleChange}
-//                   placeholder="Enter PAN Card Details"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Upload PAN Card Image</label>
-//                 <input
-//                   type="file"
-//                   accept=".jpg,.jpeg,.pdf"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//                 <p className="text-sm text-gray-500">
-//                   Only jpg, jpeg, pdf files. Max size of 1MB.
-//                 </p>
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Aadhaar Card</label>
-//                 <input
-//                   type="text"
-//                   name="aadhaarCard"
-//                   value={formData.aadhaarCard}
-//                   onChange={handleChange}
-//                   placeholder="Enter Aadhaar Card Details"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//               </div>
-//               <div>
-//                 <label className="block text-sm text-gray-600">Upload Aadhaar Card Image</label>
-//                 <input
-//                   type="file"
-//                   accept=".jpg,.jpeg,.pdf"
-//                   className="w-full border rounded px-3 py-2"
-//                 />
-//                 <p className="text-sm text-gray-500">
-//                   Only jpg, jpeg, pdf files. Max size of 1MB.
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-
-//           <button
-//             type="submit"
-//             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-//           >
-//             Submit
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default EditUser;
-
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -469,6 +8,17 @@ const EditUser = () => {
 
   // State to manage the active tab
   const [activeTab, setActiveTab] = useState("userBasicInfo");
+
+  // Array of Indian states
+  const indianStates = [
+    "Andaman and Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam",
+    "Bihar", "Chandigarh", "Chhattisgarh", "Dadra and Nagar Haveli", "Daman and Diu",
+    "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu and Kashmir",
+    "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh",
+    "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha",
+    "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+    "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+  ];
 
   // State to manage form data for User Basic Info
   const [basicInfoFormData, setBasicInfoFormData] = useState({
@@ -754,9 +304,9 @@ const EditUser = () => {
                     onChange={handleBasicInfoChange}
                     className="w-full border rounded px-3 py-2"
                   >
-                    <option value="">Select Head Office Branch</option>
-                    <option value="Branch 1">Branch 1</option>
-                    <option value="Branch 2">Branch 2</option>
+                    <option value="Head Office">Head Office</option>
+                    <option value="Vashi">Vashi</option>
+                    <option value="Sanpada">Sanpada</option>
                   </select>
                 </div>
               </div>
@@ -796,8 +346,11 @@ const EditUser = () => {
                     className="w-full border rounded px-3 py-2"
                   >
                     <option value="">Select State</option>
-                    <option value="State 1">State 1</option>
-                    <option value="State 2">State 2</option>
+                    {indianStates.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>
@@ -994,8 +547,16 @@ const EditUser = () => {
                     className="w-full border rounded px-3 py-2"
                   >
                     <option value="Owner">Owner</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Employee">Employee</option>
+                    <option value="Branch Owner">Branch Owner</option>
+                    <option value="Branch Manager">Branch Manager</option>
+                    <option value="HR Manager">HR Manager</option>
+                    <option value="Team Manager">Team Manager</option>
+                    <option value="Branch Manager">Branch Manager</option>
+                    <option value="Team Leader">Team Leader</option>
+                    <option value="Agent">Agent</option>
+                    <option value="Accountant">Accountant</option>
+                    <option value="Admin Assist">Admin Assist</option>
+                    <option value="Compliance Manager">Compliance Manager</option>
                   </select>
                 </div>
                 <div>
@@ -1008,7 +569,9 @@ const EditUser = () => {
                   >
                     <option value="Management">Management</option>
                     <option value="HR">HR</option>
-                    <option value="Engineering">Engineering</option>
+                    <option value="Operations">Operations</option>
+                    <option value="Support">Support</option>
+                    <option value="Sales">Sales</option>
                   </select>
                 </div>
                 <div>
@@ -1020,8 +583,16 @@ const EditUser = () => {
                     className="w-full border rounded px-3 py-2"
                   >
                     <option value="Owner">Owner</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Developer">Developer</option>
+                    <option value="Owner Branch">Owner Branch</option>
+                    <option value="Branch Manager">Branch Manager</option>
+                    <option value="Team Manager">Team Manager</option>
+                    <option value="Team Leader">Team Leader</option>
+                    <option value="Sr Sales Advisor">Sr Sales Advisor</option>
+                    <option value="Jr Sales Advisor">Jr Sales Advisor</option>
+                    <option value="HR">HR</option>
+                    <option value="Accountant">Accountant</option>
+                    <option value="Admin Assit">Admin Assit</option>
+                    <option value="Compliance Manager">Compliance Manager</option>
                   </select>
                 </div>
                 <div>
@@ -1044,7 +615,7 @@ const EditUser = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600">Employment Status</label>
+                  <label className="block text-sm text-gray-600">Select Employment Status</label>
                   <select
                     name="employmentStatus"
                     value={employmentFormData.employmentStatus}
@@ -1052,7 +623,13 @@ const EditUser = () => {
                     className="w-full border rounded px-3 py-2"
                   >
                     <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
+                    <option value="Resigned">Resigned</option>
+                    <option value="Suspended">Suspended</option>
+                    <option value="Termination">Termination</option>
+                    <option value="On Leave">On Leave</option>
+                    <option value="Probation">Probation</option>
+                    <option value="Spot Resign">Spot Resign</option>
+                    <option value="Abscond">Abscond</option>
                   </select>
                 </div>
                 <div>
@@ -1068,17 +645,29 @@ const EditUser = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm text-gray-600">Monthly Salary - CTC</label>
+                  <label className="block text-sm text-gray-600">Reason for Change</label>
                   <select
                     name="reasonForChange"
                     value={employmentFormData.reasonForChange}
                     onChange={handleEmploymentChange}
                     className="w-full border rounded px-3 py-2"
                   >
-                    <option value="">Reason for Change</option>
+                    <option value="Reason">Reason </option>
+                    <option value="New Joined">New Joined</option>
+                    <option value="Appraisal">Appraisal</option>
+                    <option value="Abscond">Abscond</option>
                     <option value="Promotion">Promotion</option>
-                    <option value="Resignation">Resignation</option>
+                    <option value="Role Change">Role Change</option>
+                    <option value="Probation Completion">Probation Completion</option>
+                    <option value="Performance Improvement Plan (PIP)">Performance Improvement Plan (PIP)</option>
                     <option value="Termination">Termination</option>
+                    <option value="Resignation">Resignation</option>
+                    <option value="Retirement">Retirement</option>
+                    <option value="Suspension">Suspension</option>
+                    <option value="Demotion">Demotion</option>
+                    <option value="LayOff">LayOff</option>
+                    <option value="Rehire">Rehire</option>
+                    <option value="Other">Other</option>
                   </select>
                 </div>
                 <div>
@@ -1086,7 +675,7 @@ const EditUser = () => {
                   <input
                     type="date"
                     name="startDate"
-                    value={employmentFormData.startDate}
+                    value={employmentFormData.startDateswith}
                     onChange={handleEmploymentChange}
                     className="w-full border rounded px-3 py-2"
                   />
