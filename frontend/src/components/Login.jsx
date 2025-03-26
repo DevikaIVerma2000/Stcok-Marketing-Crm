@@ -1,41 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (event) => {
-    event.preventDefault(); 
-
-    try {
-      const response = await axios.post("http://localhost:3000/auth/login", {
-        username,
-        password,
-      });
-      console.log(response);
-
-      if ((response.status === 200 || response.status === 201) && response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
-        console.log("Token stored:", localStorage.getItem("authToken"));
-        navigate("/dashboard");
-      } else {
-        setError("Login failed. Please try again.");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Invalid username or password.");
-    }
+  const handleLogin = (event) => {
+    event.preventDefault();
+    navigate("/dashboard"); 
   };
 
   return (
     <div className="bg-blue-400 h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Login</h1>
-
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>

@@ -1,20 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const AddUser = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    primaryContact: '',
+    username: '',
+    password: '',
+    userLoginStatus: 'Active',
+    role: 'Owner',
+    department: 'Management',
+    designation: 'Owner',
+    monthlyCtc: '',
+    dateOfJoining: '2025-03-24',
+    workingShift: '10AM to 7PM',
+    userBranch: 'Head Office',
+  });
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Basic validation
+    if (!formData.fullName || !formData.email || !formData.username) {
+      alert('Please fill all required fields');
+      return;
+    }
+    // Add your form submission logic here (e.g., API call)
+    console.log('Form submitted:', formData);
+    navigate('/list-users');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar (you can reuse or create a consistent one) */}
-      <div className="bg-[#0f172a] text-white w-64 py-6 px-3 space-y-6 flex-shrink-0">
+      {/* Sidebar */}
+      <div className="bg-[#0f172a] text-white w-64 py-6 px-3 space-y-6 flex-shrink-0 fixed h-full">
         <div className="flex items-center px-2 mb-6">
-          {/* You might want to use your Users icon here or a different one */}
-          {/* <Users className="h-6 w-6 mr-2" /> */}
           <span className="text-xl font-bold">TRUPOINT</span>
         </div>
-
         <nav>
           {[
             ['Dashboard', '/dashboard'],
@@ -40,7 +69,6 @@ const AddUser = () => {
             </button>
           ))}
         </nav>
-
         <div className="absolute bottom-4 left-0 w-64 px-3">
           <div className="bg-[#1e293b] rounded-lg p-3 flex items-center">
             <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
@@ -55,131 +83,203 @@ const AddUser = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
-        <div className="max-w-3xl mx-auto bg-white rounded-lg shadow-sm p-6">
-          <div className="flex items-center mb-4">
+      <div className="flex-1 p-8 ml-64">
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm p-6">
+          <div className="flex items-center mb-6">
             <button
               onClick={() => navigate('/list-users')}
-              className="inline-flex items-center px-3 py-1 text-sm text-gray-600 rounded-md hover:bg-gray-200 mr-2"
+              className="inline-flex items-center px-3 py-2 text-sm text-gray-600 rounded-md hover:bg-gray-100 mr-4 transition-colors"
             >
-              <ArrowLeft className="w-4 h-4 mr-1" /> Back
+              <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </button>
-            <h1 className="text-xl font-bold text-gray-900">Add User</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Add New User</h1>
           </div>
 
-          {/* Basic Information */}
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Basic Information</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="full-name" className="block text-gray-700 text-sm font-bold mb-2">Full Name</label>
-                <input type="text" id="full-name" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+          <form onSubmit={handleSubmit}>
+            {/* Basic Information */}
+            <Section title="Basic Information">
+              <div className="grid grid-cols-2 gap-6">
+                <InputField
+                  id="fullName"
+                  label="Full Name"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                />
+                <InputField
+                  id="email"
+                  label="Email"
+                  type="email"
+                  placeholder="Enter valid email address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+                <InputField
+                  id="primaryContact"
+                  label="Primary Contact"
+                  type="tel"
+                  placeholder="Enter 10-digit mobile number"
+                  value={formData.primaryContact}
+                  onChange={handleChange}
+                  pattern="[0-9]{10}"
+                />
               </div>
-              <div>
-                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                <input type="email" id="email" placeholder="Enter Valid Email Address" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </Section>
+
+            {/* Login Information */}
+            <Section title="Login Information">
+              <div className="grid grid-cols-2 gap-6">
+                <InputField
+                  id="username"
+                  label="Username"
+                  placeholder="root"
+                  value={formData.username}
+                  onChange={handleChange}
+                  required
+                  note="No special characters allowed"
+                />
+                <InputField
+                  id="password"
+                  label="Password"
+                  type="password"
+                  placeholder="••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  note="No spaces allowed"
+                />
+                <SelectField
+                  id="userLoginStatus"
+                  label="User Login Status"
+                  value={formData.userLoginStatus}
+                  onChange={handleChange}
+                  options={['Active', 'Inactive']}
+                />
               </div>
-              <div>
-                <label htmlFor="primary-contact" className="block text-gray-700 text-sm font-bold mb-2">Primary Contact</label>
-                <input type="tel" id="primary-contact" placeholder="Enter 10 Digit Mobile Number" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </Section>
+
+            {/* Employment Details */}
+            <Section title="Employment Details">
+              <div className="grid grid-cols-4 gap-6">
+                <SelectField
+                  id="role"
+                  label="Role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  options={[
+                    'Owner', 'Branch Owner', 'Branch Manager', 'HR Manager',
+                    'Team Manager', 'Team Leader', 'Agent', 'Accountant',
+                    'Admin Assit', 'Compliance Manager'
+                  ]}
+                />
+                <SelectField
+                  id="department"
+                  label="Department"
+                  value={formData.department}
+                  onChange={handleChange}
+                  options={['Management', 'HR', 'Operations', 'Support', 'Sales']}
+                />
+                <SelectField
+                  id="designation"
+                  label="Designation"
+                  value={formData.designation}
+                  onChange={handleChange}
+                  options={[
+                    'Owner', 'Branch Owner', 'Branch Manager', 'Team Manager',
+                    'Team Leader', 'Sr Sales Advisor', 'Jr Sales Advisor', 'HR',
+                    'Accountant', 'Admin Assit', 'Compliance Manager'
+                  ]}
+                />
+                <InputField
+                  id="monthlyCtc"
+                  label="Monthly CTC"
+                  type="number"
+                  placeholder="Salary"
+                  value={formData.monthlyCtc}
+                  onChange={handleChange}
+                  note="Enter numbers only"
+                />
+                <InputField
+                  id="dateOfJoining"
+                  label="Date of Joining"
+                  type="date"
+                  value={formData.dateOfJoining}
+                  onChange={handleChange}
+                />
+                <SelectField
+                  id="workingShift"
+                  label="Working Shift"
+                  value={formData.workingShift}
+                  onChange={handleChange}
+                  options={['10AM to 7PM', '9AM to 6PM']}
+                />
+                <SelectField
+                  id="userBranch"
+                  label="User Branch"
+                  value={formData.userBranch}
+                  onChange={handleChange}
+                  options={['Head Office', 'VASHI', 'SANPADA']}
+                />
               </div>
-              {/* Add an empty div for consistent grid layout */}
-              <div></div>
+            </Section>
+
+            <div className="mt-8 flex justify-end">
+              <button
+                type="submit"
+                className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+              >
+                Submit
+              </button>
             </div>
-          </div>
-
-          {/* Login Information */}
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Login Information</h2>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                <input type="text" id="username" placeholder="root" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <p className="text-xs text-gray-500 mt-1">No Special Characters Allowed</p>
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password</label>
-                <input type="password" id="password" placeholder="****" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <p className="text-xs text-gray-500 mt-1">No Spaces allowed in Password</p>
-              </div>
-              <div>
-                <label htmlFor="user-login-status" className="block text-gray-700 text-sm font-bold mb-2">User Login Status</label>
-                <select id="user-login-status" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>Active</option>
-                  <option>Inactive</option>
-                </select>
-                <p className="text-xs text-gray-500 mt-1">User Login Status</p>
-              </div>
-              {/* Add an empty div for consistent grid layout */}
-              <div></div>
-            </div>
-          </div>
-
-          {/* Employment Details */}
-          <div>
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Employment Details</h2>
-            <div className="grid grid-cols-4 gap-4">
-              <div>
-                <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">Role</label>
-                <select id="role" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>Owner</option>
-                  {/* Add other roles */}
-                </select>
-              </div>
-              <div>
-                <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">Department</label>
-                <select id="department" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>Management</option>
-                  {/* Add other departments */}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Select Department</p>
-              </div>
-              <div>
-                <label htmlFor="designation" className="block text-gray-700 text-sm font-bold mb-2">Designation</label>
-                <select id="designation" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>Owner</option>
-                  {/* Add other designations */}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Select Designation</p>
-              </div>
-              <div>
-                <label htmlFor="monthly-ctc" className="block text-gray-700 text-sm font-bold mb-2">Monthly CTC</label>
-                <input type="number" id="monthly-ctc" placeholder="Salary" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <p className="text-xs text-gray-500 mt-1">Enter Numbers Only</p>
-              </div>
-              <div>
-                <label htmlFor="date-of-joining" className="block text-gray-700 text-sm font-bold mb-2">Date of Joining</label>
-                <input type="date" id="date-of-joining" defaultValue="2025-03-24" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
-                <p className="text-xs text-gray-500 mt-1">Date of Joining</p>
-              </div>
-              <div>
-                <label htmlFor="working-shift" className="block text-gray-700 text-sm font-bold mb-2">Working Shift</label>
-                <select id="working-shift" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>10AM to 7PM</option>
-                  {/* Add other working shifts */}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Select Working Shift</p>
-              </div>
-              <div>
-                <label htmlFor="user-branch" className="block text-gray-700 text-sm font-bold mb-2">User Branch</label>
-                <select id="user-branch" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  <option>Head Office</option>
-                  {/* Add other branches */}
-                </select>
-                <p className="text-xs text-gray-500 mt-1">Select User Branch</p>
-              </div>
-              {/* Add an empty div for consistent grid layout */}
-              <div></div>
-            </div>
-          </div>
-
-          <button type="submit" className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 mt-6 focus:outline-none focus:shadow-outline">
-            Submit
-          </button>
+          </form>
         </div>
       </div>
     </div>
   );
 };
+
+// Reusable Components
+const Section = ({ title, children }) => (
+  <div className="mb-8">
+    <h2 className="text-lg font-semibold text-gray-700 mb-4">{title}</h2>
+    {children}
+  </div>
+);
+
+const InputField = ({ id, label, type = 'text', value, onChange, placeholder, required, note, pattern }) => (
+  <div>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <input
+      type={type}
+      id={id}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      pattern={pattern}
+      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    />
+    {note && <p className="mt-1 text-xs text-gray-500">{note}</p>}
+  </div>
+);
+
+const SelectField = ({ id, label, value, onChange, options }) => (
+  <div>
+    <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+    <select
+      id={id}
+      value={value}
+      onChange={onChange}
+      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+    >
+      {options.map((option) => (
+        <option key={option} value={option}>{option}</option>
+      ))}
+    </select>
+  </div>
+);
 
 export default AddUser;
