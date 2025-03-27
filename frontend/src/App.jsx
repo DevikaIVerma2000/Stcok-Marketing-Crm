@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-import Leads from "./components/Lead"; // Note: File name is "Lead" but imported as "Leads"
+import Leads from "./components/Lead"; 
 import AgentPerformance from "./components/AgentPerformance";
 import TeamPerformance from "./components/TeamPerformance";
 import FreshLeadStats from "./components/FreshLeadStats";

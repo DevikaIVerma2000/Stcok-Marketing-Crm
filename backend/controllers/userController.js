@@ -4,12 +4,13 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
 const UserAuth = require("../models/userAuthModel");
+const Counter = require("../models/counterModel");
 
 const UserDetailController = {
   createUserDetail: async (req, res) => {
     try {
       const {
-        emp_id,
+        // emp_id,
         firstName,
         lastName,
         full_name,
@@ -21,39 +22,38 @@ const UserDetailController = {
         createdBy,
         senderEmail,
         senderPassword,
+        username, // Ensure username is coming from the request
       } = req.body;
 
-      if (!emp_id || !full_name || !primary_contact) {
+      let counter = await Counter.findOneAndUpdate(
+        { name: "emp_id" },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+      );
+
+      let emp_id = `TRU-${String(counter.seq).padStart(4, "0")}`; // Format: TRU-0001
+
+      if (!full_name || !primary_contact || !username) {
         return res.status(400).json({
-          message: "emp_id, full_name, and primary_contact are required",
+          message: "full_name, primary_contact, and username are required",
         });
       }
-
-      // Check if email already exists
-      const existingEmail = await User.findOne({ email });
-      if (existingEmail) {
-        return res.status(400).json({ message: "Email already exists" });
+      
+      if (!emp_id || !full_name || !primary_contact || !username) {
+        return res.status(400).json({
+          message: "emp_id, full_name, primary_contact, and username are required",
+        });
       }
-
-      // Check if primary_contact already exists
-      const existingUser = await User.findOne({ primary_contact });
-      if (existingUser) {
-        return res
-          .status(400)
-          .json({ message: "Primary contact already exists" });
+      
+      // Check if username already exists
+      const existingUsername = await UserAuth.findOne({ username });
+      if (existingUsername) {
+        return res.status(400).json({ message: "Username already exists" });
       }
-
-      // Check if emp_id (used as username) already exists in userAuth
-      const existingUserAuth = await UserAuth.findOne({ username: emp_id });
-      if (existingUserAuth) {
-        return res
-          .status(400)
-          .json({ message: "Username (emp_id) already exists" });
-      }
-
+      
       const randomPassword = crypto.randomBytes(8).toString("hex");
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
-
+      
       const userDetail = new User({
         emp_id,
         first_name: firstName,
@@ -66,17 +66,18 @@ const UserDetailController = {
         designation,
         created_by: createdBy,
       });
-
+      
       const savedUserDetail = await userDetail.save();
-
+      
       const userAuthEntry = new UserAuth({
         user_id: savedUserDetail._id,
-        username: emp_id,
+        username, 
         password: hashedPassword,
       });
-
+      
       await userAuthEntry.save();
-
+      
+      // Send Email Without emp_id
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -84,24 +85,24 @@ const UserDetailController = {
           pass: senderPassword,
         },
       });
-
+      
       const mailOptions = {
         from: senderEmail,
         to: email,
         subject: "Your account details",
         text: `Hi ${firstName},
-
-Your account has been created successfully.
-
-Username: ${emp_id}
-Password: ${randomPassword}
-
-Please use these credentials to log in.
-
-Best regards,
-Your Company`,
+      
+      Your account has been created successfully.
+      
+      Username: ${username} 
+      Password: ${randomPassword}
+      
+      Please use these credentials to log in.
+      
+      Best regards,
+      Your Company`,
       };
-
+      
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.error("Email sending failed:", error);
@@ -109,16 +110,13 @@ Your Company`,
           console.log("Email sent:", info.response);
         }
       });
-
+      
       res.status(201).json({
-        message:
-          "User detail created successfully, email sent with credentials",
+        message: "User detail created successfully, email sent with credentials",
         data: savedUserDetail,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({ message: "Error creating user detail", error: error.message });
+      res.status(500).json({ message: "Error creating user detail", error: error.message });
     }
   },
 

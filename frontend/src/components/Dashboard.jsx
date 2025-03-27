@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
@@ -13,17 +13,28 @@ const Dashboard = () => {
     { label: "Sales Amount - Current Month", value: "0" },
   ];
 
+  // Protect route by checking token
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    // console.log("Token:", token); // Log token on mount
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
   const toggleAdminMenu = () => {
     setIsAdminMenuOpen(!isAdminMenuOpen);
     if (!isAdminMenuOpen) {
-      setIsManagementMenuOpen(false); // Close Management if opening Admin
+      setIsManagementMenuOpen(false);
+      setIsCompanyMenuOpen(false);
     }
   };
 
   const toggleManagementMenu = () => {
     setIsManagementMenuOpen(!isManagementMenuOpen);
     if (!isManagementMenuOpen) {
-      setIsAdminMenuOpen(false); // Close Admin if opening Management
+      setIsAdminMenuOpen(false);
+      setIsCompanyMenuOpen(false);
     }
   };
 
@@ -32,6 +43,27 @@ const Dashboard = () => {
     if (!isCompanyMenuOpen) {
       setIsAdminMenuOpen(false);
       setIsManagementMenuOpen(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await fetch("http://localhost:3000/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      localStorage.removeItem("token");
+      // console.log("Token removed on logout");
+      // console.log("Navigating to /login");
+      navigate("/", { replace: true });
+    } catch (err) {
+      console.error("Logout error:", err);
+      localStorage.removeItem("token");
+      // console.log("Navigating to /login after error");
     }
   };
 
@@ -55,8 +87,7 @@ const Dashboard = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <div className="bg-[#004f83] text-white w-64 py-6 px-3 space-y-3">
-          <div className="font-semibold text-lg px-2"></div>
+        <div className="bg-[#004f83] text-white w-64 py-6 px-3 space-y-3 relative">
           <ul className="space-y-[-4px]">
             <li>
               <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left">
@@ -228,48 +259,56 @@ const Dashboard = () => {
                 </ul>
               )}
             </li>
-
             <li>
-              <button className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
-              onClick={() => navigate("/list-of-reports")}
+              <button
+                className="block py-2 px-4 hover:bg-blue-800 w-full text-left"
+                onClick={() => navigate("/list-of-reports")}
               >
                 Reports
               </button>
             </li>
           </ul>
+
+          {/* Logout Section */}
           <div className="absolute bottom-4 left-0 w-full px-3">
-            <div className="bg-[#004f83] rounded-md p-2 flex items-center">
-              <div className="w-8 h-8 rounded-full bg-gray-400 mr-2 flex items-center justify-center">
-                {/* You can add an icon or initials here */}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6 text-white"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.125h15.002M4.501 20.125V5.5m15.002 14.625V5.5"
-                  />
-                </svg>
+            <div className="bg-[#004f83] rounded-md p-2 flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-gray-400 mr-2 flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6 text-white"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.125h15.002M4.501 20.125V5.5m15.002 14.625V5.5"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <div className="text-sm font-semibold">Super Admin</div>
+                  <div className="text-xs">Root</div>
+                </div>
               </div>
-              <div>
-                <div className="text-sm font-semibold">Super Admin</div>
-                <div className="text-xs">Root</div>
-              </div>
+              <button
+                onClick={handleLogout}
+                className="text-white hover:text-red-400 text-sm font-semibold"
+              >
+                Logout
+              </button>
             </div>
           </div>
         </div>
 
         {/* Main Content */}
         <div className="flex-1 p-6">
-          {/* Navigation Tabs */}
           <div className="bg-white shadow rounded-md mb-6">
             <div className="flex border-b border-gray-200">
-              <button className="py-3 px-4 bg-[#004f83]-500 text-white font-semibold text-sm focus:outline-none rounded-tl-md rounded-tr-md">
+              <button className="py-3 px-4 bg-[#004f83] text-white font-semibold text-sm focus:outline-none rounded-tl-md rounded-tr-md">
                 Dashboard
               </button>
               <button
@@ -290,34 +329,29 @@ const Dashboard = () => {
               >
                 Fresh Lead Stats
               </button>
-              <button className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100 rounded-tr-md"
-              onClick={() => navigate("/employee-working-status")}>
+              <button
+                className="py-3 px-4 text-gray-700 font-semibold text-sm focus:outline-none hover:bg-gray-100 rounded-tr-md"
+                onClick={() => navigate("/employee-working-status")}
+              >
                 Employee Working Status
               </button>
             </div>
           </div>
 
-          {/* Dashboard Content */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {/* Branch Sales Report */}
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-4 bg-blue-500 text-white p-2 rounded">
                 Branch Sales Report
               </h3>
               <div className="space-y-2">
                 {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="flex justify-between border-b py-2"
-                  >
+                  <div key={index} className="flex justify-between border-b py-2">
                     <span className="text-gray-600">{stat.label}</span>
                     <span className="font-semibold">{stat.value}</span>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Branch Sales Current Month */}
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-4 bg-blue-500 text-white p-2 rounded">
                 Branch Sales Current Month
@@ -326,8 +360,6 @@ const Dashboard = () => {
                 No data available.
               </div>
             </div>
-
-            {/* Branch Sales Last Month */}
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-4 bg-blue-500 text-white p-2 rounded">
                 Branch Sales Last Month
@@ -338,7 +370,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Team Leader Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-4 rounded-lg shadow">
               <h3 className="text-lg font-semibold mb-4 bg-blue-500 text-white p-2 rounded">

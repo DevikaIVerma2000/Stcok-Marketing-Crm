@@ -4,17 +4,46 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (event) => {
+  console.log("Login component rendered"); // Debug log
+
+  const handleLogin = async (event) => {
     event.preventDefault();
-    navigate("/dashboard"); 
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        console.log("Login successful:", data);
+        navigate("/dashboard");
+      } else {
+        setError(data.message || "Login failed. Please check your credentials.");
+      }
+    } catch (err) {
+      setError("An error occurred. Please try again later.");
+      console.error("Login error:", err);
+    }
   };
 
   return (
     <div className="bg-blue-400 h-screen flex justify-center items-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">Login</h1>
+
+        {error && (
+          <div className="text-red-500 text-sm text-center mb-4">{error}</div>
+        )}
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
