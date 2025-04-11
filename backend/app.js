@@ -1,8 +1,9 @@
+const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-
+app.use(morgan('dev'));
 
 const analystRoutes = require('./routes/analystRoutes');
 const accessRequestRoutes = require('./routes/accessRequestRoutes');

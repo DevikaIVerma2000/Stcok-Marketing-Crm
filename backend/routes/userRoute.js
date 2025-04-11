@@ -1,11 +1,29 @@
-const express = require('express');
-const UserDetailController = require('../controllers/userController'); 
+const express = require("express");
 const router = express.Router();
+const UserDetailController = require("../controllers/userController");
 
-router.post('/user-details', UserDetailController.createUserDetail);
-router.get('/user-details', UserDetailController.getAllUserDetails);
-router.get('/user-details/:id', UserDetailController.getUserDetailById);
-router.put('/user-details/:id', UserDetailController.updateUserDetail);
-router.delete('/user-details/:id', UserDetailController.deleteUserDetail);
+router
+  .route("/user-details")
+  .get(UserDetailController.getAllUserDetails)
+  .post(UserDetailController.createUserDetail);
+
+router
+  .route("/user-details/:id")
+  .get(UserDetailController.getUserDetailById)
+  .patch(UserDetailController.updateUserDetail)
+  .delete(UserDetailController.deleteUserDetail);
+
+router
+  .route("/user-details/emp/:emp_id") 
+  .get(UserDetailController.getUserDetailByEmpId)
+  .patch(UserDetailController.updateUserDetailByEmpId); 
+
+router
+  .route("/employment/emp/:emp_id") 
+  .patch(UserDetailController.updateEmployeeDetailByEmpId); 
+
+router
+  .route("/users/status")
+  .get(UserDetailController.getUsersByStatus); 
 
 module.exports = router;

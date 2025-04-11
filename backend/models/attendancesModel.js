@@ -15,7 +15,8 @@ const attendanceSchema = new mongoose.Schema(
     attendance_legend_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'AttendanceLegend', 
-      required: true,
+      default: null,
+      // required: true,
     },
     attendance_legend_code: {
       type: String,

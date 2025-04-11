@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const roleSchema = new mongoose.Schema({
   role: { type: String, required: true },
-  role_name: { type: String, required: true, unique: true }, // Ensure uniqueness
+  role_name: { type: String, required: true, unique: true }, 
   restriction_level: { type: String, required: true },
   clearance_permission: { type: Number, required: true },
   role_description: { type: String, required: true },
@@ -36,9 +36,6 @@ const roleSchema = new mongoose.Schema({
   updated_at: { type: Date, default: null },
   deleted_at: { type: Date, default: null }
 });
-
-// Create index to enforce uniqueness on role_name
-roleSchema.index({ role_name: 1 }, { unique: true });
 
 const Role = mongoose.model('Role', roleSchema);
 module.exports = Role;

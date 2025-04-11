@@ -23,7 +23,7 @@ const userAuthSchema = new mongoose.Schema({
   emp_access_status: {
     type: String,
     default: 'active',
-    enum: ['active', 'inactive', 'suspended'], 
+    enum: ['active', 'inactive', 'suspended' , 'disable'], 
   },
   login_status: {
     type: Boolean,

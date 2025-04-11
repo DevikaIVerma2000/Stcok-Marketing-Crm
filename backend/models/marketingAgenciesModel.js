@@ -3,13 +3,16 @@ const mongoose = require('mongoose');
 const marketingAgenciesSchema = new mongoose.Schema({
   agency_name: {
     type: String,
-    required: true,
-    maxlength: 255,
+    required: [true, 'Agency name is required'],
+    trim: true,
+    maxlength: [30, 'Agency name cannot exceed 30 characters'],
+    index: true,
   },
   agency_description: {
     type: String,
-    maxlength: 255,
-    default: null,
+    required: [true, 'Agency description is required'],
+    trim: true,
+    maxlength: [60, 'Description cannot exceed 60 characters'],
   },
   branch_id: {
     type: mongoose.Schema.Types.ObjectId,

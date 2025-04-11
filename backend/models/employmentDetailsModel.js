@@ -1,25 +1,25 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const employmentDetailsSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User',
+    ref: "User",
   },
   role_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'Role',
+    ref: "Role",
   },
   department_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'Department',
+    ref: "Department",
   },
   designation_id: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'Designation',
+    ref: "Designation",
   },
   ctc_salary: {
     type: Number,
@@ -27,17 +27,18 @@ const employmentDetailsSchema = new mongoose.Schema({
   },
   employment_status: {
     type: String,
-    required: true,
-    default: 'active',
     maxlength: 25,
+    default: null, 
   },
   employment_status_description: {
     type: String,
     maxlength: 255,
+    default: null,
   },
   employment_reason_for_change: {
     type: String,
     maxlength: 255,
+    default: null,
   },
   start_date: {
     type: Date,
@@ -45,11 +46,12 @@ const employmentDetailsSchema = new mongoose.Schema({
   },
   end_date: {
     type: Date,
+    default: null,
   },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: 'User',
+    ref: "User",
   },
   created_at: {
     type: Date,
@@ -57,12 +59,14 @@ const employmentDetailsSchema = new mongoose.Schema({
   },
   updated_at: {
     type: Date,
+    default: null,
   },
   deleted_at: {
     type: Date,
+    default: null,
   },
 });
 
-const EmploymentDetails = mongoose.model('EmploymentDetails', employmentDetailsSchema);
+const EmploymentDetails = mongoose.model("EmploymentDetails", employmentDetailsSchema);
 
 module.exports = EmploymentDetails;

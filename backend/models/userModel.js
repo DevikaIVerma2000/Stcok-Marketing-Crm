@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   emp_id: {
@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
   gender: String,
   marital_status: {
     type: String,
-    enum: ['Married', 'Single', 'Widowed', 'Divorced'],
+    enum: ["Married", "Single", "Widowed", "Divorced"],
   },
   bank_name: String,
   bank_ifsc_code: String,
@@ -57,23 +57,22 @@ const userSchema = new mongoose.Schema({
   photo_url: String,
   branch_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Branch',
+    ref: "Branch",
     index: true,
   },
   monthly_target: {
     type: Number,
     default: 0,
   },
-  user_status: {
-    type: String,
-    default: 'active',
-  },
+  user_status: { type: String, enum: ["Active", "disable"], default: "Active" },
   created_by: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     default: null,
   },
   updated_by: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
     default: null,
   },
   deleted_at: {
@@ -81,10 +80,10 @@ const userSchema = new mongoose.Schema({
     default: null,
   },
 }, {
-  timestamps: true,  
+  timestamps: true,
   versionKey: false,
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
