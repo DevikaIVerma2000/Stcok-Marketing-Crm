@@ -153,7 +153,6 @@ const getLeadSourceById = async (req, res) => {
                 source_description: leadSource.source_description || '',
                 created: leadSource.created_by?.user_id?.full_name || 'Unknown',
                 created_on: leadSource.createdAt.toISOString().split('T')[0],
-                branch: leadSource.branch_id?.name || 'Unknown',
                 updated_at: leadSource.updatedAt?.toISOString().split('T')[0] || null,
             },
         });
@@ -208,7 +207,7 @@ const updateLeadSource = async (req, res) => {
             });
         }
 
-        // Check for duplicate source_name within the same branch
+        // Check for duplicate source name
         if (source_name) {
             const existingSource = await LeadSource.findOne({
                 source_name: source_name.trim(),

@@ -9,7 +9,6 @@ const createMarketingAgency = async (req, res) => {
     const { agency_name, agency_description } = req.body;
     const user = req.user;
 
-    // Input validation
     if (!agency_name || agency_name.trim() === "") {
       return res
         .status(400)
@@ -58,15 +57,15 @@ const createMarketingAgency = async (req, res) => {
       });
     }
 
-    // Get User ID from UserAuth
+    // Check if the user is linked to a valid branch
     const userAuth = await UserAuth.findById(user.id);
     if (!userAuth) throw new Error("UserAuth not found");
 
-    // Create agency
+   
     const agency = new MarketingAgency({
       agency_name: agency_name.trim(),
       agency_description: agency_description.trim(),
-      created_by: userAuth.user_id, // Refs User per model
+      created_by: userAuth.user_id, 
       branch_id: user.branch_id,
     });
     const savedAgency = await agency.save();
@@ -149,23 +148,11 @@ const getAllMarketingAgencies = async (req, res) => {
 const getMarketingAgencyById = async (req, res) => {
   try {
     const { id } = req.params;
-    const user = req.user;
-    if (!user?.id || !user?.branch_id) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "User or branch information missing",
-        });
-    }
 
     const agency = await MarketingAgency.findOne({
       _id: id,
-      branch_id: user.branch_id,
       deleted_at: null,
-    })
-      .populate("created_by", "full_name")
-      .populate("branch_id", "name");
+    }).populate("created_by", "full_name");
 
     if (!agency) {
       return res
@@ -182,7 +169,6 @@ const getMarketingAgencyById = async (req, res) => {
         source_description: agency.agency_description,
         created: agency.created_by?.full_name || "Unknown",
         created_on: agency.created_at.toISOString().split("T")[0],
-        branch: agency.branch_id?.name || "Unknown",
         updated_at: agency.updated_at.toISOString().split("T")[0] || null,
       },
     });
@@ -331,7 +317,7 @@ const deleteMarketingAgency = async (req, res) => {
         });
     }
 
-    const agency = await MarketingAgency.findOneAndUpdate(
+    const agency = await MarketingAgency.findByIdAndDelete(
       { _id: id, branch_id: user.branch_id, deleted_at: null },
       { deleted_at: new Date() },
       { new: true }
