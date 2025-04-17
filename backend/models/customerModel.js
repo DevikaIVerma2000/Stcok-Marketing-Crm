@@ -48,11 +48,11 @@ const customerSchema = new mongoose.Schema(
     },
     city: {
       type: String,
-      required: true,
+      required: false,
     },
     state: {
       type: String,
-      required: true,
+      required: false,
     },
     zipcode: {
       type: String,

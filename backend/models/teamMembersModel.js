@@ -16,6 +16,10 @@ const teamMemberSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  deleted_at: {
+    type: Date,
+    default: null,
+  },
 }, {
   timestamps: true,
 });
