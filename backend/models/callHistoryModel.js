@@ -15,7 +15,7 @@ const callHistorySchema = new mongoose.Schema(
     compliance_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'ComplianceRecords', 
-      required: true,
+      required: false,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,5 +1,6 @@
-const Customer = require("../models/customerModel");
-// const callStatus = require("../models/callStatusesModel"); 
+const Customer = require("../models/customerModel"); 
+const callStatus = require("../models/callStatusesModel");
+const CallHistory = require("../models/callHistoryModel") 
 const { getIndiaTime } = require("../utils/time");
 
 const createCustomer = async (req, res) => {
@@ -76,10 +77,8 @@ const createCustomer = async (req, res) => {
       message: 'Customer created successfully',
       data: {
         id: customer._id,
-        full_name: customer.full_name,
-        primary_contact: customer.primary_contact,
-        created_at: getIndiaTime(customer.created_at),
-      },
+        ...customer._doc
+      }
     });
   } catch (error) {
     return res.status(500).json({ 
@@ -103,8 +102,7 @@ const getAllCustomers = async (req, res) => {
 
     const formattedCustomers = customers.map((customer) => ({
       id: customer._id,
-      created_at: getIndiaTime(customer.created_at),
-      follow_up_date: customer.created_at ? new Date(customer.created_at).toISOString().split('T')[0] : null,
+      follow_up_date: getIndiaTime(customer.created_at),
       date: customer.created_at ? new Date(customer.created_at).toISOString().split('T')[0] : null,
       full_name: customer.full_name,
       primary_contact: customer.primary_contact,
