@@ -1,25 +1,32 @@
-const mongoose = require('mongoose');
+const Customer = require("../models/customerModel");
+const CallStatuses = require("../models/callStatusesModel");
+const CallHistory = require("../models/callHistoryModel");
+const { getIndiaTime } = require("../utils/time");
+const mongoose = require("mongoose");
 
 const callHistorySchema = new mongoose.Schema(
   {
     lead_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Lead', 
-      required: true,
+      ref: 'Lead',
+      required: false,
+      default: null,
     },
     customer_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Customer', 
-      required: true,
+      ref: 'Customer',
+      required: false,
+      default: null,
     },
     compliance_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'ComplianceRecords', 
+      ref: 'ComplianceRecords',
       required: false,
+      default: null,
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', 
+      ref: 'User',
       required: true,
     },
     call_status_id: {
@@ -29,7 +36,7 @@ const callHistorySchema = new mongoose.Schema(
     },
     notes: {
       type: String,
-      maxlength: 255, 
+      maxlength: 255,
       default: null,
     },
     recording_url: {
@@ -41,20 +48,12 @@ const callHistorySchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    created_at: {
-      type: Date,
-      default: Date.now,
-    },
-    updated_at: {
-      type: Date,
-      default: Date.now,
-    },
     deleted_at: {
       type: Date,
       default: null,
     },
   },
-  { timestamps: true } 
+  { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
 module.exports = mongoose.model('CallHistory', callHistorySchema);
