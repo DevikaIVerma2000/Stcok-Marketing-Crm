@@ -67,7 +67,6 @@ const AllPackagesInvoices = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full border-collapse border border-gray-300">
           <thead>
