@@ -30,7 +30,7 @@ router.put("/customersInfo/:id", requireAuth, updateCustomerInfo);
 // search customer with contact_name , name and email
 router.post("/customers/search", requireAuth, searchCustomers);
 
-// Advanced search for customers (across all fields)
+// Advanced search for customers - across all fields
 router.post("/customers/advanced-search", requireAuth, searchAdvancedCustomer);
 
 // soft delete a customer
